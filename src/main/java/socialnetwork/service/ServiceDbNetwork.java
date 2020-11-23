@@ -371,6 +371,7 @@ public class ServiceDbNetwork {
         System.out.println(request.getStatus()+ "     "+saved);
         if(request.getStatus().equals("approved") && saved.equals("pending")){
             addFriend(request.getId().getLeft(),request.getId().getRight());
+            System.out.println("STATUS"+request.getStatus());
             repoRequest.update(request);
         }else
             if (request.getStatus().equals("rejected") && saved.equals("pending"))

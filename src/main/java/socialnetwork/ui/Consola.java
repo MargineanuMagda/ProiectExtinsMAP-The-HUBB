@@ -195,7 +195,7 @@ public class Consola {
         String status = br.readLine();
 
         FriendRequest request = new FriendRequest(status);
-        Tuple<Long,Long> ids = new Tuple<>(l1,l2);
+        Tuple<Long,Long> ids = new Tuple<>(l2,l1);
         request.setId(ids);
         serv.changeStatus(request);
     }
