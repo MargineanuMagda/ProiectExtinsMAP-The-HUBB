@@ -53,8 +53,8 @@ public class Utilizator extends Entity<Long>{
     public String toString() {
 
 
-        return "ID: " + getId() +
-                "\tFirstName='" + firstName + '\'' +
+        return
+                "FirstName='" + firstName + '\'' +
                 ", LastName='" + lastName + '\''
                 ;
     }

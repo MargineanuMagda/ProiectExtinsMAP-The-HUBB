@@ -1,0 +1,60 @@
+.button {
+    -fx-text-fill: wheat;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-weight: bold;
+    //-fx-background-color: linear-gradient(gray, darkslategrey);
+   -fx-background-color: gray;
+}
+.root{
+    -fx-background-color: linear-gradient(#073b45, #011c21);
+}
+.label {
+    -fx-font-size: 20px;
+    -fx-font-family: Candara ;
+    -fx-alignment: center;
+    //-fx-background-color: #3285a8;
+    -fx-font-weight:bold;
+    -fx-text-fill: wheat;
+    -fx-effect: dropshadow( gaussian , rgba(214, 66, 20, 0.5), 0,0,0,1 );
+   // -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+.table-row-cell:selected {
+    -fx-background-color:gray ;
+
+}
+.table-row-cell{
+    -fx-font-weight:bold;
+    -fx-font-size: 14;
+    -fx-background-color:#0e232b ;
+    -fx-fill: gray;
+    -fx-text-fill: white;
+
+}
+.table-row-cell:selected .text {
+    -fx-fill: #ffffff;
+
+}
+.table-view{
+    -fx-background-color: #0e232b;
+}
+.combo-box{
+
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(#6b03fc, wheat);
+    //-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+.combo-box.button{
+    -fx-background-color: #0e232b;
+    -fx-text-fill: wheat;
+}
+.text-field{
+    -fx-background-color: #06181f;
+    -fx-font-size: 14px;
+    -fx-background-position: center;
+    -fx-font-family: Candara ;
+    -fx-alignment: center;
+    -fx-font-style: italic;
+    -fx-text-fill: wheat;
+}

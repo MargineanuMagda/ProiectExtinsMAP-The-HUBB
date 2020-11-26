@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="socialnetwork.controller.UserController"
+            prefHeight="500.0" prefWidth="1000.0"
+            blendMode="DARKEN"
+            stylesheets="@../css/style.css"
+
+            >
+    <children>
+        <HBox>
+            <Label text="       "></Label>
+        <VBox>
+            <children>
+
+                <Label ></Label>
+                <HBox>
+                    <ImageView fitHeight="48.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@../images/circle-cropped.png" />
+                        </image>
+                        <HBox.margin>
+                            <Insets left="20.0" />
+                        </HBox.margin>
+                    </ImageView>
+                    <Label text=" LOG IN" stylesheets="@../css/style.css"  alignment="CENTER" prefHeight="50.0" >
+
+                    </Label>
+
+                </HBox>
+
+                <Label prefHeight="25"></Label>
+                <ComboBox fx:id="logIn" onAction="#handleLogIn" stylesheets="@../css/style.css" promptText="log in as" >
+
+                </ComboBox>
+                <Label prefHeight="25"></Label>
+                <HBox>
+                    <ImageView fitHeight="30.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@../images/64508.png" />
+                        </image>
+                        <HBox.margin>
+                            <Insets left="10.0" />
+                        </HBox.margin>
+                    </ImageView>
+                    <Label stylesheets="@../css/style.css"  text="  FRIENDS" alignment="CENTER_RIGHT" prefHeight="40">
+
+                    </Label>
+                </HBox>
+
+                <TableView fx:id="friends">
+                    <columns>
+                            <TableColumn prefWidth="150" text="FIRSTNAME" fx:id="firstname"></TableColumn>
+                            <TableColumn  prefWidth="150" text="LASTNAME" fx:id="lastname"></TableColumn>
+                    </columns>
+
+                </TableView>
+            </children>
+
+        </VBox>
+            <Label text="   "></Label>
+        <VBox>
+            <Label>
+
+            </Label>
+            <TextField text="/type the name of a new friend" prefHeight="50.0" prefWidth="250" >
+
+            </TextField>
+            <Label prefHeight="40"></Label>
+            <Label text="               FRIEND REQUESTS" stylesheets="@../css/style.css"  alignment="CENTER" prefHeight="50.0" >
+
+            </Label>
+            <Label prefHeight="15"></Label>
+            <HBox>
+                <TableView fx:id="requests" stylesheets="@../css/style.css">
+                    <columns>
+                        <TableColumn text="NAME" prefWidth="300" fx:id="nameR"></TableColumn>
+                        <TableColumn  text="STATUS" fx:id="statusR"></TableColumn>
+                    </columns>
+
+                </TableView>
+
+            </HBox>
+
+        </VBox>
+
+            <Label text="       "></Label>
+        <VBox>
+            <HBox>
+                <Label text="                   MENU" prefWidth="150" textAlignment="RIGHT" alignment="CENTER_RIGHT" stylesheets="@../css/style.css"></Label>
+
+                <ImageView fitHeight="80.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../images/gif2.gif" />
+                    </image>
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin>
+                </ImageView>
+
+
+            </HBox>
+            <Label prefHeight="30"></Label>
+            <Button stylesheets="@../css/style.css" text="ADD NEW FRIEND" opacity="0.8"></Button>
+            <Label prefHeight="20"></Label>
+            <Button stylesheets="@../css/style.css" text="REMOVE FRIEND" opacity="0.8"></Button>
+
+        </VBox>
+
+
+        </HBox>
+
+    </children>
+
+
+
+</AnchorPane>

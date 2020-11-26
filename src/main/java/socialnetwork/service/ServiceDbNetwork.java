@@ -282,6 +282,13 @@ public class ServiceDbNetwork {
                 })
                 .collect(Collectors.toList());
     }
+    public List<Utilizator> getUserFriends1(Long l1){
+        if(repoUsers.findOne(l1) == null)
+            throw new RepositoryException("User inexistent!\n");
+        return repoFriendship.getFriends(l1).stream()
+                .map(repoUsers::findOne)
+                .collect(Collectors.toList());
+    }
 
     /**
      * filter user s friends by month
@@ -476,5 +483,9 @@ public class ServiceDbNetwork {
         document.add(paragraph);
         document.add(continut);
         document.close();
+    }
+
+    public Object getUser(Long right) {
+        return repoUsers.findOne(right);
     }
 }
