@@ -1,8 +1,8 @@
 package socialnetwork.controller;
 
-import javafx.beans.property.ReadOnlyObjectWrapper;
+
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,7 +14,7 @@ import socialnetwork.domain.FriendRequest;
 import socialnetwork.domain.Utilizator;
 import socialnetwork.service.ServiceDbNetwork;
 
-import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;

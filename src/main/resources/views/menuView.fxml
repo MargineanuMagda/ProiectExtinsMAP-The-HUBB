@@ -17,11 +17,11 @@
             >
     <children>
         <HBox>
-            <Label text="       "></Label>
+            <Label text="       "/>
         <VBox>
             <children>
 
-                <Label ></Label>
+                <Label/>
                 <HBox>
                     <ImageView fitHeight="48.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
                         <image>
@@ -37,11 +37,11 @@
 
                 </HBox>
 
-                <Label prefHeight="25"></Label>
+                <Label prefHeight="25"/>
                 <ComboBox fx:id="logIn" onAction="#handleLogIn" stylesheets="@../css/style.css" promptText="log in as" >
 
                 </ComboBox>
-                <Label prefHeight="25"></Label>
+                <Label prefHeight="25"/>
                 <HBox>
                     <ImageView fitHeight="30.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
                         <image>
@@ -58,15 +58,15 @@
 
                 <TableView fx:id="friends">
                     <columns>
-                            <TableColumn prefWidth="150" text="FIRSTNAME" fx:id="firstname"></TableColumn>
-                            <TableColumn  prefWidth="150" text="LASTNAME" fx:id="lastname"></TableColumn>
+                        <TableColumn prefWidth="150" text="FIRSTNAME" fx:id="firstname"/>
+                        <TableColumn prefWidth="150" text="LASTNAME" fx:id="lastname"/>
                     </columns>
 
                 </TableView>
             </children>
 
         </VBox>
-            <Label text="   "></Label>
+            <Label text="   "/>
         <VBox>
             <Label>
 
@@ -74,16 +74,16 @@
             <TextField text="/type the name of a new friend" prefHeight="50.0" prefWidth="250" >
 
             </TextField>
-            <Label prefHeight="40"></Label>
+            <Label prefHeight="40"/>
             <Label text="               FRIEND REQUESTS" stylesheets="@../css/style.css"  alignment="CENTER" prefHeight="50.0" >
 
             </Label>
-            <Label prefHeight="15"></Label>
+            <Label prefHeight="15"/>
             <HBox>
                 <TableView fx:id="requests" stylesheets="@../css/style.css">
                     <columns>
-                        <TableColumn text="NAME" prefWidth="300" fx:id="nameR"></TableColumn>
-                        <TableColumn  text="STATUS" fx:id="statusR"></TableColumn>
+                        <TableColumn text="NAME" prefWidth="300" fx:id="nameR"/>
+                        <TableColumn text="STATUS" fx:id="statusR"/>
                     </columns>
 
                 </TableView>
@@ -92,10 +92,11 @@
 
         </VBox>
 
-            <Label text="       "></Label>
+            <Label text="       "/>
         <VBox>
             <HBox>
-                <Label text="                   MENU" prefWidth="150" textAlignment="RIGHT" alignment="CENTER_RIGHT" stylesheets="@../css/style.css"></Label>
+                <Label text="                   MENU" prefWidth="150" textAlignment="RIGHT" alignment="CENTER_RIGHT"
+                       stylesheets="@../css/style.css"/>
 
                 <ImageView fitHeight="80.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
                     <image>
@@ -108,10 +109,10 @@
 
 
             </HBox>
-            <Label prefHeight="30"></Label>
-            <Button stylesheets="@../css/style.css" text="ADD NEW FRIEND" opacity="0.8"></Button>
-            <Label prefHeight="20"></Label>
-            <Button stylesheets="@../css/style.css" text="REMOVE FRIEND" opacity="0.8"></Button>
+            <Label prefHeight="30"/>
+            <Button stylesheets="@../css/style.css" text="ADD NEW FRIEND" opacity="0.8"/>
+            <Label prefHeight="20"/>
+            <Button stylesheets="@../css/style.css" text="REMOVE FRIEND" opacity="0.8"/>
 
         </VBox>
 
