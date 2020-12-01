@@ -11,6 +11,7 @@ import socialnetwork.service.ServiceDbNetwork;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -194,7 +195,7 @@ public class Consola {
         System.out.println("Introduceti noul status: ");
         String status = br.readLine();
 
-        FriendRequest request = new FriendRequest(status);
+        FriendRequest request = new FriendRequest(status, LocalDateTime.now());
         Tuple<Long,Long> ids = new Tuple<>(l2,l1);
         request.setId(ids);
         serv.changeStatus(request);

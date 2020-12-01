@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import socialnetwork.config.ApplicationContext;
+import socialnetwork.controller.LogInController;
 import socialnetwork.controller.UserController;
 import socialnetwork.domain.FriendRequest;
 import socialnetwork.domain.Message;
@@ -49,7 +50,7 @@ public class MainFX extends Application {
         serv = new ServiceDbNetwork(userDbRepo, friendshipDbRepo, repoRequest, repoMessage);
 
         initView(primaryStage);
-        primaryStage.setWidth(800);
+        //primaryStage.setWidth(800);
         primaryStage.setTitle("Social Network");
         primaryStage.setOpacity(0.99);
 
@@ -62,12 +63,14 @@ public class MainFX extends Application {
     private void initView(Stage primaryStage) throws IOException {
 
         FXMLLoader userLoader = new FXMLLoader();
-        userLoader.setLocation(getClass().getResource("/views/menuView.fxml"));
+        userLoader.setLocation(getClass().getResource("/views/logInView.fxml"));
         AnchorPane layout = userLoader.load();
         primaryStage.setScene(new Scene(layout));
 
-        UserController userController = userLoader.getController();
-        userController.setService(serv);
+        //UserController userController = userLoader.getController();
+        //userController.setService(serv);
+        LogInController logInController = userLoader.getController();
+        logInController.setService(serv,primaryStage);
 
     }
 }

@@ -1,10 +1,14 @@
 package socialnetwork.repository.database;
 
 import socialnetwork.domain.FriendRequest;
+import socialnetwork.domain.Prietenie;
 import socialnetwork.domain.Tuple;
 import socialnetwork.domain.validators.RequestValidator;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class RequestDb extends AbstractDbRepository<Tuple<Long,Long>, FriendRequest> {
     public RequestDb(String url, String username, String password, RequestValidator validator) {
@@ -33,8 +37,11 @@ public class RequestDb extends AbstractDbRepository<Tuple<Long,Long>, FriendRequ
         Long id1 = resultSet.getLong("userFrom");
         Long id2 = resultSet.getLong("userTo");
         String status = resultSet.getString("status");
+        LocalDate data = resultSet.getDate("dataR").toLocalDate();
+        LocalDateTime data1 = LocalDateTime.of(data, LocalTime.now());
 
-        FriendRequest request = new FriendRequest(status);
+
+        FriendRequest request = new FriendRequest(status,data1);
         request.setId(new Tuple<>(id1,id2));
         return request;
     }
@@ -58,7 +65,7 @@ public class RequestDb extends AbstractDbRepository<Tuple<Long,Long>, FriendRequ
      */
     @Override
     protected PreparedStatement addQuery(FriendRequest entity, Connection connection) throws SQLException {
-        return connection.prepareStatement("INSERT INTO friendrequest VALUES (" + entity.getId().getLeft().toString() + ",'" + entity.getId().getRight() + "','" + entity.getStatus() + "')");
+        return connection.prepareStatement("INSERT INTO friendrequest VALUES (" + entity.getId().getLeft().toString() + ",'" + entity.getId().getRight() + "','" + entity.getStatus() + "','"+entity.getData()+"')");
 
     }
 

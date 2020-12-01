@@ -1,27 +1,39 @@
 .root {
-    -fx-background-image: url(../images/logo.gif);
+    -fx-background-image: url(../images/backround.gif);
+    -fx-background-color: linear-gradient(#073b45, #011c21);
 }
 .button {
-    -fx-text-fill: white;
+    -fx-text-fill: wheat;
     -fx-font-family: "Arial Narrow";
     -fx-font-weight: bold;
-    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
-    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+//-fx-background-color: linear-gradient(gray, darkslategrey);
+    -fx-background-color: gray;
 }
 .label {
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #2A5058;
+    -fx-font-size: 30px;
+    -fx-font-family:Impact ;
+    -fx-alignment: center;
+//-fx-background-color: #3285a8;
+    -fx-font-weight:bold;
+    -fx-text-fill: wheat;
     -fx-effect: dropshadow( gaussian , rgba(214, 66, 20, 0.5), 0,0,0,1 );
+// -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
-#logintext{
-    -fx-font-size: 32px;
-    -fx-font-family: "Arial Black";
-    -fx-fill: #2A5058;
+.combo-box{
+    -fx-background-color: #06181f;
+    -fx-font-size: 14px;
+    -fx-background-position: center;
+    -fx-font-family: Candara ;
+    -fx-alignment: center;
+    -fx-font-style: italic;
+    -fx-text-fill: wheat;
 }
-#textResponse {
-    -fx-fill: FIREBRICK;
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+.list-cell{
+    -fx-background-color: #06181f;
+    -fx-font-size: 14px;
+    -fx-background-position: center;
+    -fx-font-family: Candara ;
+    -fx-alignment: center;
+    -fx-font-style: italic;
+    -fx-text-fill: wheat;
 }
-

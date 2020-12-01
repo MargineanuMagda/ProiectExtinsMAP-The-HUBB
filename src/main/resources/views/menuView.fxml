@@ -10,7 +10,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="socialnetwork.controller.UserController"
-            prefHeight="500.0" prefWidth="1000.0"
+            prefHeight="500.0" prefWidth="900.0"
             blendMode="DARKEN"
             stylesheets="@../css/style.css"
 
@@ -23,9 +23,9 @@
 
                 <Label/>
                 <HBox>
-                    <ImageView fitHeight="48.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
+                    <ImageView  fitHeight="70.0" fitWidth="82.0" pickOnBounds="true" preserveRatio="true">
                         <image>
-                            <Image url="@../images/circle-cropped.png" />
+                            <Image url="@../images/network.png" />
                         </image>
                         <HBox.margin>
                             <Insets left="20.0" />
@@ -37,7 +37,7 @@
 
                 </HBox>
 
-                <Label prefHeight="25"/>
+                <Label prefHeight="10"/>
                 <ComboBox fx:id="logIn" onAction="#handleLogIn" stylesheets="@../css/style.css" promptText="log in as" >
 
                 </ComboBox>
@@ -71,19 +71,22 @@
             <Label>
 
             </Label>
-            <TextField text="/type the name of a new friend" prefHeight="50.0" prefWidth="250" >
+            <ComboBox  stylesheets="@../css/login.css" fx:id="newFriend"  prefHeight="50.0" prefWidth="380" promptText="/search the name of a new friend"  >
+            </ComboBox>
 
-            </TextField>
-            <Label prefHeight="40"/>
-            <Label text="               FRIEND REQUESTS" stylesheets="@../css/style.css"  alignment="CENTER" prefHeight="50.0" >
+            <Label prefHeight="60"/>
+            <Label text="      RECEIVED FRIEND REQUESTS" stylesheets="@../css/style.css"  alignment="CENTER" prefHeight="50.0" />
 
-            </Label>
+
+
+
             <Label prefHeight="15"/>
             <HBox>
-                <TableView fx:id="requests" stylesheets="@../css/style.css">
+                <TableView onMouseClicked="#handleRequest" fx:id="requests" stylesheets="@../css/style.css">
                     <columns>
                         <TableColumn text="NAME" prefWidth="300" fx:id="nameR"/>
                         <TableColumn text="STATUS" fx:id="statusR"/>
+                        <TableColumn text="DATA" prefWidth="100" fx:id="dataR"/>
                     </columns>
 
                 </TableView>
@@ -93,7 +96,7 @@
         </VBox>
 
             <Label text="       "/>
-        <VBox>
+        <VBox prefWidth="212" alignment="TOP_RIGHT">
             <HBox>
                 <Label text="                   MENU" prefWidth="150" textAlignment="RIGHT" alignment="CENTER_RIGHT"
                        stylesheets="@../css/style.css"/>
@@ -109,18 +112,21 @@
 
 
             </HBox>
+
+            <MenuBar >
+                <Menu text="MESSAGES">
+                    <MenuItem text="INBOX"/>
+                </Menu>
+                <Menu text="SENT REQUESTS"/>
+            </MenuBar>
             <Label prefHeight="30"/>
-            <Button stylesheets="@../css/style.css" text="ADD NEW FRIEND" opacity="0.8"/>
+            <Button fx:id="addFBtn"  onAction="#handeSendRequest" stylesheets="@../css/style.css" text="ADD NEW FRIEND" opacity="0.8"/>
             <Label prefHeight="20"/>
-            <Button stylesheets="@../css/style.css" text="REMOVE FRIEND" opacity="0.8"/>
+            <Button fx:id="rmFBtn" onAction="#handleRmFriend" stylesheets="@../css/style.css" text="REMOVE FRIEND" opacity="0.8"/>
 
+            <Label prefHeight="50"/>
+            <Button onAction="#handeSENTRequest" text="SENT FRIEND REQUESTS" prefHeight="50"/>
         </VBox>
-
-
         </HBox>
-
     </children>
-
-
-
 </AnchorPane>

@@ -7,6 +7,10 @@ import socialnetwork.repository.Repository;
 import socialnetwork.repository.RepositoryException;
 import socialnetwork.repository.database.FriendshipDb;
 import socialnetwork.utils.Utils;
+import socialnetwork.utils.events.ChangeEventType;
+import socialnetwork.utils.events.UserChangeEvent;
+import socialnetwork.utils.observer.Observable;
+import socialnetwork.utils.observer.Observer;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -14,7 +18,7 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ServiceDbNetwork {
+public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
 
     //Service has 2 types of repo: repoUsers ans a repoFrienship
     private final Repository<Long, Utilizator> repoUsers;
@@ -36,6 +40,8 @@ public class ServiceDbNetwork {
         this.repoFriendship = repo1;
         this.repoRequest = repoRequest;
         this.repoMessage = repoMessage;
+
+
     }
 
 
@@ -49,6 +55,9 @@ public class ServiceDbNetwork {
         Utilizator task = repoUsers.save(messageTask);
         if (task != null)
             throw new ServiceException("ID existent!\n");
+        else{
+            notifyObservers(new UserChangeEvent(ChangeEventType.ADD_USER,messageTask));
+        }
 
     }
 
@@ -110,7 +119,8 @@ public class ServiceDbNetwork {
         Prietenie pnew = repoFriendship.save(p);
         if (pnew != null)
             throw new ServiceException("Prietenie existenta!!\n");
-
+        else
+            notifyObservers(new UserChangeEvent(ChangeEventType.ADD_FRIEND));
 
     }
 
@@ -145,7 +155,13 @@ public class ServiceDbNetwork {
         Prietenie prietenie = repoFriendship.delete(idPrietenie);
         if (prietenie == null)
             throw new ServiceException("Stergere esuata: Prietenie inexistenta!\n");
+        else
+            notifyObservers(new UserChangeEvent(ChangeEventType.RM_FRIEND));
 
+
+    }
+    public boolean findFriendship(Long id1 ,Long id2){
+        return repoFriendship.findOne(new Tuple<>(Long.min(id1, id2), Long.max(id1, id2))) != null;
 
     }
 
@@ -349,7 +365,17 @@ public class ServiceDbNetwork {
         FriendRequest r = repoRequest.save(request);
         if (r != null)
             throw new ServiceException("Cerere de prietenie deja trimisa!\n");
+        else
+            notifyObservers(new UserChangeEvent(ChangeEventType.ADD_REQUEST));
 
+    }
+    public void removeRequest(FriendRequest removedRequest) {
+        try {
+            repoRequest.delete(removedRequest.getId());
+            notifyObservers(new UserChangeEvent(ChangeEventType.RM_REQUEST));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -365,6 +391,15 @@ public class ServiceDbNetwork {
                 .collect(Collectors.toList());
 
     }
+    public List<FriendRequest> sentRequests(Long id) {
+
+        List<FriendRequest> friendRequests = new ArrayList<>();
+        repoRequest.findAll().forEach(friendRequests::add);
+        System.out.println("Am ajuns aici");
+        return friendRequests.stream()
+                .filter(x->x.getId().getLeft().equals(id))
+                .collect(Collectors.toList());
+    }
 
     /**
      * change status of a request
@@ -373,16 +408,22 @@ public class ServiceDbNetwork {
     public void changeStatus(FriendRequest request){
         if (repoRequest.findOne(request.getId()) == null)
             throw  new ServiceException("Aceasta cerere nu a fost inregistrata!\n");
-        String saved =repoRequest.findOne(request.getId()).getStatus();
+        FriendRequest saved =repoRequest.findOne(request.getId());
 
         System.out.println(request.getStatus()+ "     "+saved);
-        if(request.getStatus().equals("approved") && saved.equals("pending")){
+        if(request.getStatus().equals("approved") && saved.getStatus().equals("pending")){
             addFriend(request.getId().getLeft(),request.getId().getRight());
             System.out.println("STATUS"+request.getStatus());
-            repoRequest.update(request);
+            //repoRequest.update(request);
+            repoRequest.delete(request.getId());
+            notifyObservers(new UserChangeEvent(ChangeEventType.RM_REQUEST));
         }else
-            if (request.getStatus().equals("rejected") && saved.equals("pending"))
-                repoRequest.update(request);
+            if (request.getStatus().equals("rejected") && saved.getStatus().equals("pending"))
+            {
+                //repoRequest.update(request);
+                repoRequest.delete(request.getId());
+                notifyObservers(new UserChangeEvent(ChangeEventType.RM_REQUEST));
+            }
             else
                 throw new ServiceException("Statusul cererii nu poate fi modificat!Cerere deja admisa/respinsa!\n");
 
@@ -487,5 +528,22 @@ public class ServiceDbNetwork {
 
     public Object getUser(Long right) {
         return repoUsers.findOne(right);
+    }
+
+    private List<Observer<UserChangeEvent>> observers=new ArrayList<>();
+
+    @Override
+    public void addObserver(Observer<UserChangeEvent> e) {
+        observers.add(e);
+    }
+
+    @Override
+    public void removeObserver(Observer<UserChangeEvent> e) {
+        //
+    }
+
+    @Override
+    public void notifyObservers(UserChangeEvent t) {
+        observers.stream().forEach(x->x.update(t));
     }
 }
