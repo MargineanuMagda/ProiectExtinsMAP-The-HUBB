@@ -53,10 +53,7 @@ public class Utilizator extends Entity<Long>{
     public String toString() {
 
 
-        return
-                "FirstName='" + firstName + '\'' +
-                ", LastName='" + lastName + '\''
-                ;
+        return firstName + " " + lastName;
     }
 
     @Override
