@@ -3,16 +3,17 @@ package socialnetwork.domain;
 import socialnetwork.utils.Utils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Message extends Entity<Long>{
     Long idMessage;
     Long userFrom;
-    Long userTo;
+    List<Long> userTo;
     LocalDateTime date;
     Long reply;
     String mesaj;
 
-    public Message(Long userFrom, Long userTo, Long reply, String mesaj) {
+    public Message(Long userFrom, List<Long> userTo, Long reply, String mesaj) {
         this.userFrom = userFrom;
         this.userTo = userTo;
         this.reply = reply;
@@ -20,7 +21,7 @@ public class Message extends Entity<Long>{
         this.date= LocalDateTime.now();
     }
 
-    public Message(Long idMessage, Long userFrom, Long userTo, LocalDateTime date, Long reply, String mesaj) {
+    public Message(Long idMessage, Long userFrom, List<Long> userTo, LocalDateTime date, Long reply, String mesaj) {
         this.idMessage = idMessage;
         this.userFrom = userFrom;
         this.userTo = userTo;
@@ -38,7 +39,7 @@ public class Message extends Entity<Long>{
         return userFrom;
     }
 
-    public Long getUserTo() {
+    public List<Long> getUserTo() {
         return userTo;
     }
 

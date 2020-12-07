@@ -19,8 +19,9 @@ import socialnetwork.domain.Utilizator;
 import socialnetwork.service.ServiceDbNetwork;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class MessagesController {
     ServiceDbNetwork serv;
@@ -28,6 +29,8 @@ public class MessagesController {
     Stage mainStage;
     Stage dialogStage;
     ObservableList<Message> msgList = FXCollections.observableArrayList();
+    ObservableList<Utilizator> userList = FXCollections.observableArrayList();
+    List<Long> usetToList;
     @FXML
     Label lbl;
     @FXML
@@ -42,18 +45,28 @@ public class MessagesController {
     TextField toField;
     @FXML
     TextArea text;
+    @FXML
+    ComboBox<Utilizator> toCombobox;
 
 
     public void setService(ServiceDbNetwork serv, Stage stage, Utilizator user) {
         this.serv=serv; mainUser=user; mainStage=stage;
         lbl.setText("HELLO "+ mainUser.toString()+" !");
+        List<Utilizator> users = new ArrayList<>();
+        serv.getAllUsers().forEach(x->users.add(x));
+        userList.setAll(users);
+        toCombobox.setItems(userList);
+        usetToList= new ArrayList<>();
     }
+
+
 
     public void handleSent(ActionEvent actionEvent) {
         List<Message> msgs = serv.inboxUserSENT(mainUser.getId());
         msgList.setAll(msgs);
         from.setText("TO");
-        from.setCellValueFactory(c->new SimpleStringProperty(serv.getUser(c.getValue().getUserTo()).toString()));
+        //from.setCellValueFactory(c->new SimpleStringProperty(serv.getUser(c.getValue().getUserTo().get(0)).toString()));
+        from.setCellValueFactory(c->new SimpleStringProperty(c.getValue().getUserTo().stream().map(x->serv.getUser(x).toString()).reduce("",(x,y)->x+"\n"+y)));
 
         date.setCellValueFactory(new PropertyValueFactory<>("Date"));
         subj.setCellValueFactory(new PropertyValueFactory<>("Mesaj"));
@@ -75,18 +88,14 @@ public class MessagesController {
 
         try {
 
-            final Utilizator[] to = new Utilizator[1];
-            serv.getAllUsers().forEach(x -> {
-                if (x.toString().equals(toField.getText()))
-                    to[0] = x;
-            });
-            if (to[0] == null)
+
+            if (usetToList.isEmpty())
                 MessageAlert.showErrorMessage(null, "This user does not exist!!");
             else {
                 Long reply = 0L;
                 if(table.getSelectionModel().getSelectedItem()!= null)
                     reply = table.getSelectionModel().getSelectedItem().getId();
-                Message m = new Message(mainUser.getId(), to[0].getId(), reply, text.getText());
+                Message m = new Message(mainUser.getId(), usetToList, reply, text.getText());
                 m.setId(0L);
                 serv.sentNewMessage(m);
                 MessageAlert.showMessage(null, Alert.AlertType.INFORMATION,"INFORMATION","message was sent succesfully!");
@@ -132,5 +141,16 @@ public class MessagesController {
     private void handleReply(ActionEvent actionEvent) {
         toField.setText(serv.getUser(table.getSelectionModel().getSelectedItem().getUserFrom()).toString());
         dialogStage.close();
+    }
+
+    public void handleNewUserTo(ActionEvent actionEvent) {
+        usetToList.add(toCombobox.getValue().getId());
+        String s = toField.getText();
+        toField.setText(s+"   "+toCombobox.getValue());
+    }
+
+    public void handleRemove(ActionEvent actionEvent) {
+        toField.clear();
+        usetToList.clear();
     }
 }

@@ -1,3 +1,4 @@
+/*
 package socialnetwork.ui;
 
 
@@ -15,9 +16,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+*/
 /**
  * User interface
- */
+ *//*
+
 public class Consola {
     private final ServiceDbNetwork serv;
     private final InputStreamReader isr = new InputStreamReader(System.in);
@@ -27,10 +30,12 @@ public class Consola {
         this.serv = serv;
     }
 
-    /**
+    */
+/**
      * add a new user
      * @throws IOException
-     */
+     *//*
+
     public void addUser() throws IOException {
 
         System.out.println("Introduceti prenumele userului: ");
@@ -50,10 +55,12 @@ public class Consola {
 
     }
 
-    /**
+    */
+/**
      * remove a user
      * @throws IOException
-     */
+     *//*
+
     public void removeUser() throws IOException {
 
 
@@ -63,10 +70,12 @@ public class Consola {
         serv.deleteUtilizator(l);
     }
 
-    /**
+    */
+/**
      * add a friendship
      * @throws IOException
-     */
+     *//*
+
     public void addFriend() throws IOException {
 
         System.out.println("Introduceti id-ul primului prieten: ");
@@ -78,10 +87,12 @@ public class Consola {
 
     }
 
-    /**
+    */
+/**
      * remove a friendship
      * @throws IOException
-     */
+     *//*
+
     public void removeFriend() throws IOException {
 
         System.out.println("Introduceti id-ul primului prieten pe care doriti a-l sterge: ");
@@ -92,38 +103,48 @@ public class Consola {
         serv.removeFriend(l1, l2);
     }
 
-    /**
+    */
+/**
      * print all users
-     */
+     *//*
+
     public void printUsers() {
         serv.getAllUsers().forEach(System.out::println);
     }
 
-    /**
+    */
+/**
      * print all friendships
-     */
+     *//*
+
     public void printFrienships() {
         serv.getAllPrietenii().forEach(System.out::println);
     }
 
-    /**
+    */
+/**
      * print the number of communities
-     */
+     *//*
+
     public void nrCommunities() {
         System.out.println("Numarul de communitati este: " + serv.nrCommunities());
     }
 
-    /**
+    */
+/**
      * print the list of useer
-     */
+     *//*
+
     public void largestCommunity() {
         serv.longestPath().forEach(x -> System.out.println(x.getFirstName() + " " + x.getLastName() + "-->"));
     }
 
-    /**
+    */
+/**
      * print users's friends
      * @throws IOException
-     */
+     *//*
+
     private void userFriends() throws IOException, DocumentException {
 
         System.out.println("Introduceti id-ul userului pentru care afiseaza prietenii: ");
@@ -140,10 +161,12 @@ public class Consola {
 
     }
 
-    /**
+    */
+/**
      * print users's friends filtered by month
      * @throws IOException
-     */
+     *//*
+
     private void filterDate() throws IOException, DocumentException {
         System.out.println("Introduceti id-ul userului pentru care afiseaza prietenii: ");
         Long l1 = Long.parseLong(br.readLine());
@@ -425,3 +448,4 @@ public class Consola {
 
 
 }
+*/

@@ -435,8 +435,15 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
      * @param m message we want to add
      */
     public void sentNewMessage(Message m){
-        if(repoUsers.findOne(m.getUserFrom()) == null || repoUsers.findOne(m.getUserTo()) == null)
-            throw new ServiceException("Mesajul nu poate fi trimis!\nExpeditor/Destinatar invalid!\n");
+        if(repoUsers.findOne(m.getUserFrom()) == null )
+            throw new ServiceException("Mesajul nu poate fi trimis!\nExpeditor invalid!\n");
+        m.getUserTo().forEach(x->{
+            if(repoUsers.findOne(x) == null || x == m.getUserFrom())
+                throw new ServiceException("Mesajul nu poate fi trimis!\nDestinatar invalid!\n");
+        });
+        if(m.getUserTo().stream().count() != m.getUserTo().stream().sorted().distinct().count())
+            throw new ServiceException("Mesajul nu poate fi trimis!\nExpeditor dublat!\n");
+
         repoMessage.save(m);
     }
 
@@ -445,11 +452,17 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
      * @param id - user's id
      * @param mesaj - string
      */
-    public void replyMessage(Long id, String mesaj){
+    public void replyMessage(Long id, Long idUserFrom, String mesaj){
         Message message = repoMessage.findOne(id);
         if (message == null)
             throw new ServiceException("Reply la mesaj invalid!!\n");
-        Message reply = new Message(message.getUserTo(),message.getUserFrom(),id,mesaj);
+        List<Long> toList = new ArrayList<>();
+        toList.add(message.getUserFrom());
+        message.getUserTo().stream().forEach(x->{
+            if ( x!= idUserFrom)
+                toList.add(x);
+        });
+        Message reply = new Message(idUserFrom,toList,id,mesaj);
         reply.setId(0L);
         repoMessage.save(reply);
     }

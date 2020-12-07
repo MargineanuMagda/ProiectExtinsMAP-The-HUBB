@@ -25,12 +25,16 @@
     -fx-background-color:gray ;
 
 }
+.table-row-cell:selected .text {
+     -fx-fill: #ffffff;
+
+ }
+
 .table-row-cell{
     -fx-font-weight:bold;
     -fx-font-size: 14;
     -fx-background-color:#0e232b ;
-
-    -fx-text-fill: white;
+    -fx-text-fill: wheat;
 
 }
 .list-cell{
@@ -38,16 +42,20 @@
 
     -fx-text-fill: #0e232b;
 }
-.table-row-cell:selected .text {
-    -fx-fill: #ffffff;
 
-}
+
 .table-view{
+
     -fx-background-color: #0e232b;
 
     //-fx-background-image: url(../images/L2cq.gif);
 
 }
+.table-view .column-header,
+.table-view .column-header-background .filler {
+    -fx-background-color:  #06181f;
+}
+
 .combo-box{
 
     -fx-text-fill: white;

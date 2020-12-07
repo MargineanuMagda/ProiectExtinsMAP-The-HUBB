@@ -51,13 +51,16 @@
             <Label text="       "/>
             <VBox>
                 <Label prefHeight="50"/>
+                <ComboBox fx:id="toCombobox" onAction="#handleNewUserTo"/>
                 <Label text="TO"/>
                 <TextField fx:id="toField"/>
                 <Label prefHeight="50"/>
                 <Label text="Message"/>
+
                 <TextArea fx:id="text" prefWidth="200"></TextArea>
                 <Label prefHeight="50"/>
                 <Button text="SEND" onAction="#handleNewMsg"/>
+                <Button text="REMOVE ALL USERS TO" onAction="#handleRemove"/>
             </VBox>
         </HBox>
     </VBox>
