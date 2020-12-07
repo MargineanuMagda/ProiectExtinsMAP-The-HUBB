@@ -44,6 +44,9 @@
 }
 .table-view{
     -fx-background-color: #0e232b;
+
+    //-fx-background-image: url(../images/L2cq.gif);
+
 }
 .combo-box{
 
@@ -58,6 +61,15 @@
     -fx-text-fill: wheat;
 }
 .text-field{
+    -fx-background-color: #06181f;
+    -fx-font-size: 14px;
+    -fx-background-position: center;
+    -fx-font-family: Candara ;
+    -fx-alignment: center;
+    -fx-font-style: italic;
+    -fx-text-fill: wheat;
+}
+.menu-bar{
     -fx-background-color: #06181f;
     -fx-font-size: 14px;
     -fx-background-position: center;

@@ -244,5 +244,34 @@ public class UserController implements Observer<UserChangeEvent> {
         initiateFriends();
         initiateRequests();
     }
+
+    public void handleMessages(ActionEvent actionEvent) {
+        if(logIn.getValue()!=null){
+            try {
+
+                FXMLLoader loader = new FXMLLoader();
+                Utilizator user = logIn.getValue();
+                loader.setLocation(getClass().getResource("/views/messagesView.fxml"));
+                AnchorPane root = (AnchorPane) loader.load();
+
+                //Stage
+                Stage dialogStage = new Stage();
+                dialogStage.setTitle("Messages");
+                dialogStage.initModality(Modality.WINDOW_MODAL);
+                Scene scene = new Scene(root);
+                dialogStage.setScene(scene);
+
+                MessagesController msgCtrl = loader.getController();
+                msgCtrl.setService(serv,dialogStage,user);
+                dialogStage.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else
+            MessageAlert.showErrorMessage(null,"You are not logged in!");
+
+    }
+
 }
 

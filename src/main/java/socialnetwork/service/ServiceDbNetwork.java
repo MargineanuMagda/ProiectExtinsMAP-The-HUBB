@@ -490,6 +490,28 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
         return inbox;
 
     }
+    public List<Message> inboxUser1(Long l1) {
+        if (repoUsers.findOne(l1) == null)
+            throw new ServiceException("Id invalis!\n");
+        ArrayList<Message> inbox = new ArrayList<>();
+        repoMessage.findAll().forEach(x->{
+            if ( x.getUserTo().equals(l1))
+                inbox.add(x);
+        });
+        return inbox;
+
+    }
+    public List<Message> inboxUserSENT(Long l1) {
+        if (repoUsers.findOne(l1) == null)
+            throw new ServiceException("Id invalis!\n");
+        ArrayList<Message> inbox = new ArrayList<>();
+        repoMessage.findAll().forEach(x->{
+            if ( x.getUserFrom().equals(l1))
+                inbox.add(x);
+        });
+        return inbox;
+
+    }
 
     /**
      *
@@ -546,4 +568,6 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
     public void notifyObservers(UserChangeEvent t) {
         observers.stream().forEach(x->x.update(t));
     }
+
+
 }

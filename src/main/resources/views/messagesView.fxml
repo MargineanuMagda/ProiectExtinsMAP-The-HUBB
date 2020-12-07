@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="socialnetwork.controller.MessagesController"
+            stylesheets="@../css/style.css"
+
+            prefHeight="400.0" prefWidth="900.0">
+    <VBox>
+        <MenuBar prefWidth="900">
+        <Menu text="INBOX">
+            <MenuItem onAction="#handleReceived" text="RECEIVED"/>
+            <MenuItem onAction="#handleSent" text="SENT"/>
+        </Menu>
+        <Menu text="NEW MESSAGE" />
+    </MenuBar>
+        <HBox>
+            <VBox>
+
+
+                <HBox>
+                    <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@../images/L2cq.gif" />
+                        </image>
+                        <HBox.margin>
+                            <Insets left="10.0" />
+                        </HBox.margin>
+                    </ImageView>
+                    <Label text="       "/>
+                    <Label  fx:id="lbl" prefHeight="100" text="HELLO!"/>
+                </HBox>
+
+                <TableView onMouseClicked="#handleShowConv" fx:id="table" prefWidth="600.0">
+                    <columns>
+                        <TableColumn prefWidth="150" fx:id="from" text="FROM"/>
+                        <TableColumn prefWidth="150" fx:id="date" text="DATA"/>
+                        <TableColumn prefWidth="300" fx:id="subj" text="SUBJECT"/>
+                    </columns>
+                </TableView>
+            </VBox>
+            <Label text="       "/>
+            <VBox>
+                <Label prefHeight="50"/>
+                <Label text="TO"/>
+                <TextField fx:id="toField"/>
+                <Label prefHeight="50"/>
+                <Label text="Message"/>
+                <TextArea fx:id="text" prefWidth="200"></TextArea>
+                <Label prefHeight="50"/>
+                <Button text="SEND" onAction="#handleNewMsg"/>
+            </VBox>
+        </HBox>
+    </VBox>
+
+
+
+
+</AnchorPane>

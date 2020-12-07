@@ -31,9 +31,15 @@
                             <Insets left="20.0" />
                         </HBox.margin>
                     </ImageView>
-                    <Label text=" LOG IN" stylesheets="@../css/style.css"  alignment="CENTER" prefHeight="50.0" >
+                    <HBox>
+                        <Label text=" THE H" stylesheets="@../css/style.css"  alignment="CENTER" prefHeight="50.0" >
 
-                    </Label>
+                        </Label>
+                        <Label text="UBB" style="-fx-text-fill:#5396bd"  alignment="CENTER" prefHeight="50.0" >
+
+                        </Label>
+                    </HBox>
+
 
                 </HBox>
 
@@ -113,19 +119,32 @@
 
             </HBox>
 
-            <MenuBar >
-                <Menu text="MESSAGES">
-                    <MenuItem text="INBOX"/>
-                </Menu>
-                <Menu text="SENT REQUESTS"/>
-            </MenuBar>
-            <Label prefHeight="30"/>
-            <Button fx:id="addFBtn"  onAction="#handeSendRequest" stylesheets="@../css/style.css" text="ADD NEW FRIEND" opacity="0.8"/>
-            <Label prefHeight="20"/>
-            <Button fx:id="rmFBtn" onAction="#handleRmFriend" stylesheets="@../css/style.css" text="REMOVE FRIEND" opacity="0.8"/>
 
+            <Label prefHeight="30"/>
+
+            <Button fx:id="msgFBtn" onAction="#handleMessages" text="MESSAGES" prefHeight="50" prefWidth="200" />
             <Label prefHeight="50"/>
-            <Button onAction="#handeSENTRequest" text="SENT FRIEND REQUESTS" prefHeight="50"/>
+            <Button onAction="#handeSENTRequest" text="SENT FRIEND REQUESTS" prefHeight="50" prefWidth="200"/>
+            <Label prefHeight="50"/>
+            <HBox>
+                <Label text="           BUTTONS" prefWidth="150" textAlignment="RIGHT" alignment="CENTER_RIGHT"
+                       stylesheets="@../css/style.css"/>
+
+                <ImageView fitHeight="80.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../images/gif2.gif" />
+                    </image>
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin>
+                </ImageView>
+
+
+            </HBox>
+            <Button fx:id="addFBtn"  onAction="#handeSendRequest" text="ADD NEW FRIEND" opacity="0.8" prefHeight="50" prefWidth="200"/>
+            <Label prefHeight="20"/>
+            <Button fx:id="rmFBtn" onAction="#handleRmFriend"  text="REMOVE FRIEND" opacity="0.8" prefHeight="50" prefWidth="200"/>
+
         </VBox>
         </HBox>
     </children>
