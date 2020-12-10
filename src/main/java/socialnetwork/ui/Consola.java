@@ -1,4 +1,3 @@
-/*
 package socialnetwork.ui;
 
 
@@ -14,12 +13,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-*/
 /**
  * User interface
- *//*
+ */
 
 public class Consola {
     private final ServiceDbNetwork serv;
@@ -30,11 +29,10 @@ public class Consola {
         this.serv = serv;
     }
 
-    */
 /**
      * add a new user
      * @throws IOException
-     *//*
+     */
 
     public void addUser() throws IOException {
 
@@ -55,11 +53,10 @@ public class Consola {
 
     }
 
-    */
 /**
      * remove a user
      * @throws IOException
-     *//*
+     */
 
     public void removeUser() throws IOException {
 
@@ -70,11 +67,10 @@ public class Consola {
         serv.deleteUtilizator(l);
     }
 
-    */
 /**
      * add a friendship
      * @throws IOException
-     *//*
+     */
 
     public void addFriend() throws IOException {
 
@@ -87,11 +83,10 @@ public class Consola {
 
     }
 
-    */
 /**
      * remove a friendship
      * @throws IOException
-     *//*
+     */
 
     public void removeFriend() throws IOException {
 
@@ -103,47 +98,42 @@ public class Consola {
         serv.removeFriend(l1, l2);
     }
 
-    */
 /**
      * print all users
-     *//*
+     */
 
     public void printUsers() {
         serv.getAllUsers().forEach(System.out::println);
     }
 
-    */
 /**
      * print all friendships
-     *//*
+     */
 
     public void printFrienships() {
         serv.getAllPrietenii().forEach(System.out::println);
     }
 
-    */
 /**
      * print the number of communities
-     *//*
+     */
 
     public void nrCommunities() {
         System.out.println("Numarul de communitati este: " + serv.nrCommunities());
     }
 
-    */
 /**
      * print the list of useer
-     *//*
+     */
 
     public void largestCommunity() {
         serv.longestPath().forEach(x -> System.out.println(x.getFirstName() + " " + x.getLastName() + "-->"));
     }
 
-    */
 /**
      * print users's friends
      * @throws IOException
-     *//*
+     */
 
     private void userFriends() throws IOException, DocumentException {
 
@@ -161,11 +151,10 @@ public class Consola {
 
     }
 
-    */
 /**
      * print users's friends filtered by month
      * @throws IOException
-     *//*
+     */
 
     private void filterDate() throws IOException, DocumentException {
         System.out.println("Introduceti id-ul userului pentru care afiseaza prietenii: ");
@@ -248,14 +237,14 @@ public class Consola {
         String mesaj = br.readLine();
 
         ids.forEach(x->{
-            Message mes = new Message(l1,x,0L,mesaj);
+            Message mes = new Message(l1, Arrays.asList(x),0L,mesaj);
             mes.setId(0L);
             serv.sentNewMessage(mes);
         });
 
         System.out.println("Mesaj trimis cu succes!");
     }
-    private void replyMessage() throws IOException{
+  /*  private void replyMessage() throws IOException{
         System.out.println("Introduceti id-ul userului ce trimite un reply ");
         Long l1 = Long.parseLong(br.readLine());
         System.out.println(serv.inboxUser(l1));
@@ -268,7 +257,7 @@ public class Consola {
         String mesaj = br.readLine();
         serv.replyMessage(l2,mesaj);
         System.out.println("Reply trimis cu succes!\n");
-    }
+    }*/
 
     private void showConversation() throws IOException{
 
@@ -359,7 +348,7 @@ public class Consola {
                 sentMessage();
                 break;
             case 2:
-                replyMessage();
+                //replyMessage();
                 break;
             case 3:
                 showConversation();
@@ -448,4 +437,3 @@ public class Consola {
 
 
 }
-*/

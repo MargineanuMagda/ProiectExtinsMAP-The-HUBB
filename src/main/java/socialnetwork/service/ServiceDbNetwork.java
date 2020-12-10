@@ -442,10 +442,10 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
         if(repoUsers.findOne(m.getUserFrom()) == null )
             throw new ServiceException("Mesajul nu poate fi trimis!\nExpeditor invalid!\n");
         m.getUserTo().forEach(x->{
-            if(repoUsers.findOne(x) == null || x == m.getUserFrom())
+            if(repoUsers.findOne(x) == null || x.equals(m.getUserFrom()))
                 throw new ServiceException("Mesajul nu poate fi trimis!\nDestinatar invalid!\n");
         });
-        if(m.getUserTo().stream().count() != m.getUserTo().stream().sorted().distinct().count())
+        if((long) m.getUserTo().size() != m.getUserTo().stream().distinct().count())
             throw new ServiceException("Mesajul nu poate fi trimis!\nExpeditor dublat!\n");
 
         repoMessage.save(m);
@@ -462,8 +462,8 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
             throw new ServiceException("Reply la mesaj invalid!!\n");
         List<Long> toList = new ArrayList<>();
         toList.add(message.getUserFrom());
-        message.getUserTo().stream().forEach(x->{
-            if ( x!= idUserFrom)
+        message.getUserTo().forEach(x->{
+            if (!x.equals(idUserFrom))
                 toList.add(x);
         });
         Message reply = new Message(idUserFrom,toList,id,mesaj);
@@ -471,18 +471,13 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
         repoMessage.save(reply);
     }
 
-    /**
-     *
-     * @param id1 - first user's id
-     * @param id2 - second user's id
-     * @return list representing the conversation
-     */
+
     public List<String> showConversation(Long id1 , Long id2){
         if(repoUsers.findOne(id1) == null || repoUsers.findOne(id2) == null)
             throw new ServiceException("Id-uri invalide!\n");
         ArrayList<Message> messages = new ArrayList<>() ;
         repoMessage.findAll().forEach(x->{
-            if( (x.getUserFrom().equals(id1) && x.getUserTo().equals( id2)) || (x.getUserFrom().equals( id2) && x.getUserTo().equals(id1)))
+            if( (x.getUserFrom().equals(id1) && x.getUserTo().contains( id2)) || (x.getUserFrom().equals( id2) && x.getUserTo().contains(id1)))
                 messages.add(x);
         });
         return messages.stream()
@@ -501,7 +496,7 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
             throw new ServiceException("Id invalis!\n");
         ArrayList<String> inbox = new ArrayList<>();
         repoMessage.findAll().forEach(x->{
-            if ( x.getUserTo().equals(l1))
+            if ( x.getUserTo().contains(l1))
                 inbox.add("ID: "+x.getId()+"From: "+ x.getUserFrom()+ "Messagge: "+x.getMesaj()+"\n");
         });
         return inbox;
@@ -535,8 +530,8 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
      * @param raport list of strings
      * @param filename name of the file
      * @param cerinta string
-     * @throws FileNotFoundException
-     * @throws DocumentException
+     * @throws FileNotFoundException-exceptie
+     * @throws DocumentException-exceptie
      */
     public void saveRaportToPDF(List<String> raport, String filename,String cerinta) throws FileNotFoundException, DocumentException {
         Document document = new Document();
@@ -545,9 +540,8 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
 
         Font bolt = new Font(Font.FontFamily.HELVETICA,18,Font.BOLDITALIC);
         Font redFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
-                Font.NORMAL, BaseColor.RED);
-        Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
-                Font.BOLD);
+                Font.BOLD, BaseColor.RED);
+
         Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12,
                 Font.BOLD);
         Paragraph title = new Paragraph("Raport \n",bolt);
@@ -557,7 +551,7 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
         document.addHeader("Nume raport",cerinta);
         Paragraph paragraph = new Paragraph( "\t\t"+cerinta+"\n",redFont);
         com.itextpdf.text.List list = new com.itextpdf.text.List(true,false,100);
-        raport.forEach(x->list.add(x));
+        raport.forEach(list::add);
         Paragraph continut = new Paragraph("Continut\n",smallBold);
         continut.add(list);
         document.add(paragraph);
@@ -569,7 +563,7 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
         return repoUsers.findOne(right);
     }
 
-    private List<Observer<UserChangeEvent>> observers=new ArrayList<>();
+    private final List<Observer<UserChangeEvent>> observers=new ArrayList<>();
 
     @Override
     public void addObserver(Observer<UserChangeEvent> e) {
@@ -583,7 +577,7 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
 
     @Override
     public void notifyObservers(UserChangeEvent t) {
-        observers.stream().forEach(x->x.update(t));
+        observers.forEach(x->x.update(t));
     }
 
 
@@ -598,8 +592,7 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
                 Font.NORMAL, BaseColor.RED);
         Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
                 Font.BOLD);
-        Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12,
-                Font.BOLD);
+
         Paragraph title = new Paragraph("       RAPORT \n\n",bolt);
 
         document.add(title);
@@ -607,28 +600,87 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
         String cerinta = "\nUSER " + mainUser.toString()+ "\nACTIVITY BETWEEN " + date1 + " , "+ date2;
         document.addHeader("Nume raport","USER " + mainUser.toString()+ "\nACTIVITY BETWEEN " + date1 + " , "+ date2);
         Paragraph paragraph = new Paragraph( "\t\t"+cerinta+"\n",redFont);
-        Paragraph paragraph2 = new Paragraph( "NEW FRIENDS",subFont);
+
         com.itextpdf.text.List listM = new com.itextpdf.text.List(true,false,100);
         StreamSupport.stream(repoMessage.findAll().spliterator(),false).collect(Collectors.toList())
                 .stream()
                 .filter(x->x.getUserTo().contains(mainUser.getId()))
+                .filter(x-> x.getDate().isAfter(LocalDateTime.of(date1, LocalTime.now())) && x.getDate().isBefore(LocalDateTime.of(date2, LocalTime.now())))
+                .forEach(x-> listM.add("DATE     "+ x.getDate().format(Utils.myFormatObj)+"    FROM:     "+repoUsers.findOne(x.getUserFrom()) + "      MESSAGE:    "+x.getMesaj() ));
+
+        Paragraph messages = new Paragraph("MESSAGES\n",subFont);
+
+        messages.add("  ");
+        messages.add(listM);
+
+        document.add(paragraph);
+        document.add(messages);
+
+        Paragraph newF = new Paragraph("NEW FRIENDS\n",subFont);
+        com.itextpdf.text.List listN = new com.itextpdf.text.List(true,false,100);
+
+        StreamSupport.stream(repoFriendship.findAll().spliterator(),false).collect(Collectors.toList())
+                .stream()
+                .filter(x->(x.getId().getRight().equals(mainUser.getId())) || (x.getId().getLeft().equals(mainUser.getId())))
+                .filter(x-> x.getDate().isAfter(LocalDateTime.of(date1, LocalTime.now())) && x.getDate().isBefore(LocalDateTime.of(date2, LocalTime.now())))
+                .forEach(x->{
+                    Long friend;
+                    System.out.println(x);
+                    if (x.getId().getRight().equals(mainUser.getId()))
+                        friend = x.getId().getLeft();
+                    else
+                        friend = x.getId().getRight();
+
+                    listN.add("DATE     "+ x.getDate().format(Utils.myFormatObj)+"    NEW FRIEND:     "+repoUsers.findOne(friend) );
+                });
+
+        newF.add("   ");
+        newF.add(listN);
+        document.add(newF);
+        document.close();
+    }
+
+    public void raport2(Utilizator mainUser, Utilizator friend, LocalDate date1, LocalDate date2, String filename) throws FileNotFoundException, DocumentException{
+
+        Document document = new Document();
+        PdfWriter.getInstance(document,new FileOutputStream(filename + ".pdf"));
+        document.open();
+
+        Font bolt = new Font(Font.FontFamily.HELVETICA,18,Font.BOLDITALIC);
+        Font redFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
+                Font.NORMAL, BaseColor.RED);
+        Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
+                Font.BOLD);
+
+        Paragraph title = new Paragraph("       RAPORT \n\n",bolt);
+
+        document.add(title);
+
+        String cerinta = "\nUSER " + mainUser.toString()+ "\nMESSAGES FROM  "+ friend + "\nBETWEEN " + date1 + " , "+ date2;
+       Paragraph paragraph = new Paragraph( "\t\t"+cerinta+"\n",redFont);
+
+        com.itextpdf.text.List listM = new com.itextpdf.text.List(true,false,100);
+        StreamSupport.stream(repoMessage.findAll().spliterator(),false).collect(Collectors.toList())
+                .stream()
                 .filter(x->{
-                    if ( x.getDate().isAfter(LocalDateTime.of(date1,LocalTime.now())) && x.getDate().isBefore(LocalDateTime.of(date2,LocalTime.now())))
+                    if (x.getUserTo().contains(mainUser.getId()) && x.getUserFrom().equals(friend.getId()))
+                        return true;
+                    else if ((x.getUserTo().contains(friend.getId()) && x.getUserFrom().equals(mainUser.getId())))
                         return true;
                     else
                         return false;
                 })
-                .forEach(x->{
-                    listM.add("DATE     "+ x.getDate()+"    FROM:     "+repoUsers.findOne(x.getUserFrom()) + "      MESSAGE:    "+x.getMesaj() );
-                });
+                .filter(x-> x.getDate().isAfter(LocalDateTime.of(date1, LocalTime.now())) && x.getDate().isBefore(LocalDateTime.of(date2, LocalTime.now())))
+                .forEach(x-> listM.add("DATE     "+ x.getDate().format(Utils.myFormatObj)+"    FROM:     "+repoUsers.findOne(x.getUserFrom()) + "      MESSAGE:    "+x.getMesaj() ));
 
-        Paragraph messages = new Paragraph("MESSAGES\n",smallBold);
+        Paragraph messages = new Paragraph("MESSAGES\n",subFont);
+
+        messages.add("  ");
         messages.add(listM);
+
         document.add(paragraph);
         document.add(messages);
-        document.add(new Paragraph());
-        Paragraph newF = new Paragraph("NEW FRIENDS\n",smallBold);
-        document.add(newF);
         document.close();
+
     }
 }

@@ -147,6 +147,10 @@ public class MessagesController {
     }
 
     private void handleReply(ActionEvent actionEvent) {
+        toCombobox.setValue((Utilizator) serv.getUser(table.getSelectionModel().getSelectedItem().getUserFrom()));
+        usetToList.clear();
+        usetToList.add(table.getSelectionModel().getSelectedItem().getUserFrom());
+        table.getSelectionModel().getSelectedItem().getUserTo().stream().filter(x->x!=mainUser.getId()).forEach(x->usetToList.add(x));
         toField.setText(serv.getUser(table.getSelectionModel().getSelectedItem().getUserFrom()).toString());
         dialogStage.close();
     }
