@@ -126,6 +126,8 @@
             <Label prefHeight="50"/>
             <Button onAction="#handeSENTRequest" text="SENT FRIEND REQUESTS" prefHeight="50" prefWidth="200"/>
             <Label prefHeight="50"/>
+            <Button onAction="#handeRapoarte" text="RAPORTS" prefHeight="50" prefWidth="200"/>
+            <Label prefHeight="50"/>
             <HBox>
                 <Label text="           BUTTONS" prefWidth="150" textAlignment="RIGHT" alignment="CENTER_RIGHT"
                        stylesheets="@../css/style.css"/>

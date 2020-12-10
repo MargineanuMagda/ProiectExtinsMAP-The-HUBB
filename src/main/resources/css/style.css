@@ -86,3 +86,15 @@
     -fx-font-style: italic;
     -fx-text-fill: wheat;
 }
+.tab-pane.tab.text{
+    -fx-font-size: 20px;
+    -fx-font-family: Candara ;
+    -fx-alignment: center;
+//-fx-background-color: #3285a8;
+    -fx-font-weight:bold;
+    -fx-text-fill: wheat;
+    -fx-background-color: #06181f;
+}
+.tab-pane{
+    -fx-background-color: #06181f;
+}

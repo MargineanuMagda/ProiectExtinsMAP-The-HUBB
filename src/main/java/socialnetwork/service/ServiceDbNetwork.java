@@ -14,9 +14,13 @@ import socialnetwork.utils.observer.Observer;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
 
@@ -508,7 +512,7 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
             throw new ServiceException("Id invalis!\n");
         ArrayList<Message> inbox = new ArrayList<>();
         repoMessage.findAll().forEach(x->{
-            if ( x.getUserTo().equals(l1))
+            if ( x.getUserTo().contains(l1))
                 inbox.add(x);
         });
         return inbox;
@@ -583,4 +587,48 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
     }
 
 
+    public void raport1(Utilizator mainUser, LocalDate date1, LocalDate date2, String text) throws FileNotFoundException, DocumentException{
+
+        Document document = new Document();
+        PdfWriter.getInstance(document,new FileOutputStream(text + ".pdf"));
+        document.open();
+
+        Font bolt = new Font(Font.FontFamily.HELVETICA,18,Font.BOLDITALIC);
+        Font redFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
+                Font.NORMAL, BaseColor.RED);
+        Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
+                Font.BOLD);
+        Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12,
+                Font.BOLD);
+        Paragraph title = new Paragraph("       RAPORT \n\n",bolt);
+
+        document.add(title);
+
+        String cerinta = "\nUSER " + mainUser.toString()+ "\nACTIVITY BETWEEN " + date1 + " , "+ date2;
+        document.addHeader("Nume raport","USER " + mainUser.toString()+ "\nACTIVITY BETWEEN " + date1 + " , "+ date2);
+        Paragraph paragraph = new Paragraph( "\t\t"+cerinta+"\n",redFont);
+        Paragraph paragraph2 = new Paragraph( "NEW FRIENDS",subFont);
+        com.itextpdf.text.List listM = new com.itextpdf.text.List(true,false,100);
+        StreamSupport.stream(repoMessage.findAll().spliterator(),false).collect(Collectors.toList())
+                .stream()
+                .filter(x->x.getUserTo().contains(mainUser.getId()))
+                .filter(x->{
+                    if ( x.getDate().isAfter(LocalDateTime.of(date1,LocalTime.now())) && x.getDate().isBefore(LocalDateTime.of(date2,LocalTime.now())))
+                        return true;
+                    else
+                        return false;
+                })
+                .forEach(x->{
+                    listM.add("DATE     "+ x.getDate()+"    FROM:     "+repoUsers.findOne(x.getUserFrom()) + "      MESSAGE:    "+x.getMesaj() );
+                });
+
+        Paragraph messages = new Paragraph("MESSAGES\n",smallBold);
+        messages.add(listM);
+        document.add(paragraph);
+        document.add(messages);
+        document.add(new Paragraph());
+        Paragraph newF = new Paragraph("NEW FRIENDS\n",smallBold);
+        document.add(newF);
+        document.close();
+    }
 }

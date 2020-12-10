@@ -273,5 +273,33 @@ public class UserController implements Observer<UserChangeEvent> {
 
     }
 
+    public void handeRapoarte(ActionEvent actionEvent) {
+        if(logIn.getValue()!=null){
+            try {
+
+                FXMLLoader loader = new FXMLLoader();
+                Utilizator user = logIn.getValue();
+                loader.setLocation(getClass().getResource("/views/raportsView.fxml"));
+                AnchorPane root = (AnchorPane) loader.load();
+
+                //Stage
+                Stage dialogStage = new Stage();
+                dialogStage.setTitle("Raports");
+                dialogStage.initModality(Modality.WINDOW_MODAL);
+                Scene scene = new Scene(root);
+                dialogStage.setScene(scene);
+
+                RaportsController rCtrl = loader.getController();
+                rCtrl.setService(serv,dialogStage,user);
+                dialogStage.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else
+            MessageAlert.showErrorMessage(null,"You are not logged in!");
+
+
+    }
 }
 

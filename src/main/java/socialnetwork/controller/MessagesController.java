@@ -77,7 +77,10 @@ public class MessagesController {
         List<Message> msgs = serv.inboxUser1(mainUser.getId());
         msgList.setAll(msgs);
         from.setText("FROM");
-        from.setCellValueFactory(c->new SimpleStringProperty(serv.getUser(c.getValue().getUserFrom()).toString()));
+        from.setCellValueFactory(c->new SimpleStringProperty(serv.getUser(c.getValue().getUserFrom()).toString()+";"+c.getValue().getUserTo().stream()
+                .filter(x->{return (!x.equals(mainUser.getId()));})
+                .map(x->serv.getUser(x).toString())
+                .reduce("",(x,y)->x+";"+y)));
 
         date.setCellValueFactory(new PropertyValueFactory<>("Date"));
         subj.setCellValueFactory(new PropertyValueFactory<>("Mesaj"));
@@ -116,12 +119,17 @@ public class MessagesController {
             root.setPrefHeight(300);
             root.setPrefWidth(400);
             root.setStyle("-fx-background-color: #404041");
+            Label from = new Label("FROM:\t"+ serv.getUser(msg.getUserFrom()));
+            from.setStyle("-fx-text-fill: white");
+
+            Label to = new Label("TO:\t"+ msg.getUserTo().stream().map(x->serv.getUser(x)).reduce("",(x,y)->x+";"+y));
+            to.setStyle("-fx-text-fill: white");
             TextArea txt = new TextArea(msg.getMesaj());
             txt.setEditable(false);
             Label l= new Label();
             Button btn = new Button("REPLY");
             btn.setOnAction(this::handleReply);
-            VBox box = new VBox(new Label(),txt,l,btn);
+            VBox box = new VBox(new Label(),from,to,txt,l,btn);
             box.setAlignment(Pos.CENTER);
             root.getChildren().addAll(box);
             //Stage
