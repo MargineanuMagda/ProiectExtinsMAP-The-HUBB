@@ -8,12 +8,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import socialnetwork.domain.FriendRequest;
@@ -24,7 +27,6 @@ import socialnetwork.utils.observer.Observer;
 
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -32,14 +34,16 @@ import java.util.stream.StreamSupport;
 public class UserController implements Observer<UserChangeEvent> {
 
     ServiceDbNetwork serv;
+
     ObservableList<Utilizator> modelUsers = FXCollections.observableArrayList();
     ObservableList<Utilizator> modelFriends = FXCollections.observableArrayList();
     ObservableList<FriendRequest> modelRequests = FXCollections.observableArrayList();
     ObservableList<Utilizator> modelNotFriends=FXCollections.observableArrayList();
 
-
+    Stage mainStage;
+    Utilizator mainUser;
     @FXML
-    ComboBox<Utilizator> logIn;
+    Label lbl;
 
     @FXML
     ComboBox<Utilizator> newFriend;
@@ -67,12 +71,16 @@ public class UserController implements Observer<UserChangeEvent> {
     @FXML
     Button rmFBtn;
 
-    public void setService( ServiceDbNetwork serv){
+    public void setService(ServiceDbNetwork serv, Utilizator user, Stage dialogStage){
 
         this.serv = serv;
+        mainUser=user;
+        mainStage=dialogStage;
         serv.addObserver(this);
         initModel();
         initiate();
+        initiateFriends();
+        initiateRequests();
     }
 
     private void initModel() {
@@ -83,22 +91,41 @@ public class UserController implements Observer<UserChangeEvent> {
     }
 
     private void initiate() {
-        logIn.setItems(modelUsers);
+       lbl.setText(mainUser.toString());
 
         //logIn.setOnAction(event);
     }
 
     @FXML
     public void handleLogIn(ActionEvent actionEvent) {
-        initiateFriends();
-        initiateRequests();
+        try {
+            FXMLLoader loader = new FXMLLoader();
+
+            loader.setLocation(getClass().getResource("/views/logView.fxml"));
+            AnchorPane root = (AnchorPane) loader.load();
+
+            //Stage
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Log In");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            Scene scene = new Scene(root);
+            dialogStage.setScene(scene);
+
+            LogController logCtrl = loader.getController();
+            logCtrl.setService(serv,dialogStage);
+            dialogStage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
     }
 
 
 
     private void initiateRequests() {
-        Utilizator user = logIn.getValue();
+        Utilizator user = mainUser;
         Iterable<FriendRequest> req = serv.userRequest(user.getId());
         List<FriendRequest> reqList = StreamSupport.stream(req.spliterator(),false).collect(Collectors.toList());
         modelRequests.setAll(reqList);
@@ -114,7 +141,7 @@ public class UserController implements Observer<UserChangeEvent> {
 
 
     private void initiateFriends() {
-        Utilizator user = logIn.getValue();
+        Utilizator user = mainUser;
         Iterable<Utilizator> users = serv.getUserFriends1(user.getId());
         List<Utilizator> usersList = StreamSupport.stream(users.spliterator(),false).collect(Collectors.toList());
         modelFriends.setAll(usersList);
@@ -181,7 +208,7 @@ public class UserController implements Observer<UserChangeEvent> {
 
     public void handleRmFriend(ActionEvent actionEvent) {
         Utilizator rmFriend =friends.getSelectionModel().getSelectedItem();
-        Utilizator user = logIn.getValue();
+        Utilizator user = mainUser;
         if(rmFriend!=null){
             try {
                 serv.removeFriend(user.getId(), rmFriend.getId());
@@ -196,7 +223,7 @@ public class UserController implements Observer<UserChangeEvent> {
     }
 
     public void handeSendRequest(ActionEvent actionEvent) {
-        Utilizator userFrom = logIn.getValue();
+        Utilizator userFrom = mainUser;
         Utilizator userTo = newFriend.getValue();
 
         if(userTo != null){
@@ -210,11 +237,11 @@ public class UserController implements Observer<UserChangeEvent> {
     }
 
     public void handeSENTRequest(ActionEvent actionEvent) {
-        if(logIn.getValue()!=null){
+
             try {
 
                 FXMLLoader loader = new FXMLLoader();
-                Utilizator user = logIn.getValue();
+                Utilizator user = mainUser;
                 loader.setLocation(getClass().getResource("/views/sentRequestsView.fxml"));
                 AnchorPane root = (AnchorPane) loader.load();
 
@@ -231,9 +258,7 @@ public class UserController implements Observer<UserChangeEvent> {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else
-            MessageAlert.showErrorMessage(null,"You are not logged in!");
+
 
     }
 
@@ -246,11 +271,11 @@ public class UserController implements Observer<UserChangeEvent> {
     }
 
     public void handleMessages(ActionEvent actionEvent) {
-        if(logIn.getValue()!=null){
+        if(mainUser!=null){
             try {
 
                 FXMLLoader loader = new FXMLLoader();
-                Utilizator user = logIn.getValue();
+                Utilizator user = mainUser;
                 loader.setLocation(getClass().getResource("/views/messagesView.fxml"));
                 AnchorPane root = (AnchorPane) loader.load();
 
@@ -274,11 +299,11 @@ public class UserController implements Observer<UserChangeEvent> {
     }
 
     public void handeRapoarte(ActionEvent actionEvent) {
-        if(logIn.getValue()!=null){
+        if(mainUser!=null){
             try {
 
                 FXMLLoader loader = new FXMLLoader();
-                Utilizator user = logIn.getValue();
+                Utilizator user = mainUser;
                 loader.setLocation(getClass().getResource("/views/raportsView.fxml"));
                 AnchorPane root = (AnchorPane) loader.load();
 
@@ -300,6 +325,34 @@ public class UserController implements Observer<UserChangeEvent> {
             MessageAlert.showErrorMessage(null,"You are not logged in!");
 
 
+    }
+
+    public void handleLogOut(MouseEvent mouseEvent) {
+        Stage dialogStage = new Stage();
+        AnchorPane root = new AnchorPane();
+        root.setPrefHeight(300);
+        root.setPrefWidth(400);
+        root.setStyle("-fx-background-color: #404041");
+        Label info = new Label(mainUser.toString()+"\n Are you sure you want to log out?");
+        info.setStyle("-fx-text-fill: white");
+        info.setPrefHeight(100);
+
+        Button btnYes = new Button("YES");
+        Button btnNo = new Button("NO");
+        btnYes.setOnAction(x->{mainStage.close();dialogStage.close();});
+        btnNo.setOnAction(x->dialogStage.close());
+        HBox hbox = new HBox(btnYes,new Label("     "),btnNo);
+        VBox box = new VBox(new Label(),info,hbox);
+        box.setAlignment(Pos.CENTER);
+        root.getChildren().addAll(box);
+        //Stage
+
+        dialogStage.setTitle("Message");
+        dialogStage.initModality(Modality.WINDOW_MODAL);
+        Scene scene = new Scene(root);
+        dialogStage.setScene(scene);
+
+        dialogStage.show();
     }
 }
 

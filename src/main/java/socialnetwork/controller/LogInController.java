@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import socialnetwork.domain.Utilizator;
 import socialnetwork.service.ServiceDbNetwork;
 
 import java.awt.*;
@@ -27,7 +28,7 @@ public class LogInController {
             loader.setLocation(getClass().getResource("/views/menuView.fxml"));
             AnchorPane root = (AnchorPane) loader.load();
 
-            //Stage
+           /* //Stage
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Social network");
             dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -35,9 +36,9 @@ public class LogInController {
             dialogStage.setScene(scene);
 
             UserController userCtrl = loader.getController();
-            userCtrl.setService(serv);
+            userCtrl.setService(serv, (Utilizator) serv.getUser(log.getIdGenerat()));
             stage.close();
-            dialogStage.show();
+            dialogStage.show();*/
         } catch (Exception e) {
             e.printStackTrace();
         }

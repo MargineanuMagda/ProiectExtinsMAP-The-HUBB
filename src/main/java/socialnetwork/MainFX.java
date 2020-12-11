@@ -1,26 +1,16 @@
 package socialnetwork;
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import socialnetwork.config.ApplicationContext;
+import socialnetwork.controller.LogController;
 import socialnetwork.controller.LogInController;
-import socialnetwork.controller.UserController;
-import socialnetwork.domain.FriendRequest;
-import socialnetwork.domain.Message;
-import socialnetwork.domain.Tuple;
-import socialnetwork.domain.Utilizator;
-import socialnetwork.domain.validators.FrienshipValidator;
-import socialnetwork.domain.validators.MessageValidator;
-import socialnetwork.domain.validators.RequestValidator;
-import socialnetwork.domain.validators.UtilizatorValidator;
+import socialnetwork.domain.*;
+import socialnetwork.domain.validators.*;
 import socialnetwork.repository.Repository;
-import socialnetwork.repository.database.FriendshipDb;
-import socialnetwork.repository.database.MessageDb;
-import socialnetwork.repository.database.RequestDb;
-import socialnetwork.repository.database.UtilizatorDb;
+import socialnetwork.repository.database.*;
 import socialnetwork.service.ServiceDbNetwork;
 
 
@@ -47,7 +37,9 @@ public class MainFX extends Application {
 
         Repository<Tuple<Long, Long>, FriendRequest> repoRequest = new RequestDb(url, username, pasword, new RequestValidator());
         Repository<Long, Message> repoMessage = new MessageDb(url,username,pasword,new MessageValidator());
-        serv = new ServiceDbNetwork(userDbRepo, friendshipDbRepo, repoRequest, repoMessage);
+        Repository<Tuple<String,String>, LogIn> repoLogin = new LogInDb(url,username,pasword,new LogInValidator());
+
+        serv = new ServiceDbNetwork(userDbRepo, friendshipDbRepo, repoRequest, repoMessage, repoLogin);
 
         initView(primaryStage);
         //primaryStage.setWidth(800);
@@ -63,14 +55,14 @@ public class MainFX extends Application {
     private void initView(Stage primaryStage) throws IOException {
 
         FXMLLoader userLoader = new FXMLLoader();
-        userLoader.setLocation(getClass().getResource("/views/logInView.fxml"));
+        userLoader.setLocation(getClass().getResource("/views/logView.fxml"));
         AnchorPane layout = userLoader.load();
         primaryStage.setScene(new Scene(layout));
 
         //UserController userController = userLoader.getController();
         //userController.setService(serv);
-        LogInController logInController = userLoader.getController();
-        logInController.setService(serv,primaryStage);
+        LogController logController = userLoader.getController();
+        logController.setService(serv,primaryStage);
 
     }
 }

@@ -29,6 +29,7 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
     private final FriendshipDb repoFriendship;
     private final Repository<Tuple<Long,Long>, FriendRequest> repoRequest;
     private final Repository<Long,Message> repoMessage;
+    private final Repository<Tuple<String,String>, LogIn> repoLogin;
 
     //Graph structure used for finding comunities
     //dictionar ce creeaza o relatie de 1-1 intre noduri si id urile userilor
@@ -39,13 +40,14 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
     private Boolean[] visited;
 
 
-    public ServiceDbNetwork(Repository<Long, Utilizator> repo, FriendshipDb repo1, Repository<Tuple<Long, Long>, FriendRequest> repoRequest, Repository<Long, Message> repoMessage) {
+    public ServiceDbNetwork(Repository<Long, Utilizator> repo, FriendshipDb repo1, Repository<Tuple<Long, Long>, FriendRequest> repoRequest, Repository<Long, Message> repoMessage, Repository<Tuple<String, String>, LogIn> repoLogin) {
         this.repoUsers = repo;
         this.repoFriendship = repo1;
         this.repoRequest = repoRequest;
         this.repoMessage = repoMessage;
 
 
+        this.repoLogin = repoLogin;
     }
 
 
@@ -682,5 +684,20 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
         document.add(messages);
         document.close();
 
+    }
+
+
+    public void addLog(LogIn log) {
+        LogIn task = repoLogin.save(log);
+        if (task != null)
+            throw new ServiceException("ID existent!\n");
+    }
+
+    public Long findLogID(String username, String passwd) {
+        return repoLogin.findOne(new Tuple<>(username,passwd)).getIdGenerat();
+    }
+
+    public LogIn findLog(Tuple<String, String> stringStringTuple) {
+        return  repoLogin.findOne(stringStringTuple);
     }
 }

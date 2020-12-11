@@ -10,7 +10,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="socialnetwork.controller.UserController"
-            prefHeight="500.0" prefWidth="900.0"
+            prefHeight="700.0" prefWidth="900.0"
             blendMode="DARKEN"
             stylesheets="@../css/style.css"
 
@@ -23,7 +23,7 @@
 
                 <Label/>
                 <HBox>
-                    <ImageView  fitHeight="70.0" fitWidth="82.0" pickOnBounds="true" preserveRatio="true">
+                    <ImageView  onMouseClicked="#handleLogOut" fitHeight="70.0" fitWidth="82.0" pickOnBounds="true" preserveRatio="true">
                         <image>
                             <Image url="@../images/network.png" />
                         </image>
@@ -32,10 +32,10 @@
                         </HBox.margin>
                     </ImageView>
                     <HBox>
-                        <Label text=" THE H" stylesheets="@../css/style.css"  alignment="CENTER" prefHeight="50.0" >
+                        <Label text=" THE H" style="-fx-font-size: 30"  prefHeight="50.0" >
 
                         </Label>
-                        <Label text="UBB" style="-fx-text-fill:#5396bd"  alignment="CENTER" prefHeight="50.0" >
+                        <Label text="UBB" style="-fx-text-fill:#5396bd"   prefHeight="50.0" >
 
                         </Label>
                     </HBox>
@@ -44,9 +44,8 @@
                 </HBox>
 
                 <Label prefHeight="10"/>
-                <ComboBox fx:id="logIn" onAction="#handleLogIn" stylesheets="@../css/style.css" promptText="log in as" >
-
-                </ComboBox>
+               <Label text="HELLO,"/>
+                <Label fx:id="lbl"/>
                 <Label prefHeight="25"/>
                 <HBox>
                     <ImageView fitHeight="30.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
@@ -74,9 +73,8 @@
         </VBox>
             <Label text="   "/>
         <VBox>
-            <Label>
-
-            </Label>
+            <Label/>
+            <Label/>
             <ComboBox  stylesheets="@../css/login.css" fx:id="newFriend"  prefHeight="50.0" prefWidth="380" promptText="/search the name of a new friend"  >
             </ComboBox>
 

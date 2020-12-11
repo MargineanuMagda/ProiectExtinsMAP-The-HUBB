@@ -2,19 +2,10 @@ package socialnetwork;
 
 
 import socialnetwork.config.ApplicationContext;
-import socialnetwork.domain.FriendRequest;
-import socialnetwork.domain.Message;
-import socialnetwork.domain.Tuple;
-import socialnetwork.domain.Utilizator;
-import socialnetwork.domain.validators.FrienshipValidator;
-import socialnetwork.domain.validators.MessageValidator;
-import socialnetwork.domain.validators.RequestValidator;
-import socialnetwork.domain.validators.UtilizatorValidator;
+import socialnetwork.domain.*;
+import socialnetwork.domain.validators.*;
 import socialnetwork.repository.Repository;
-import socialnetwork.repository.database.FriendshipDb;
-import socialnetwork.repository.database.MessageDb;
-import socialnetwork.repository.database.RequestDb;
-import socialnetwork.repository.database.UtilizatorDb;
+import socialnetwork.repository.database.*;
 import socialnetwork.service.ServiceDbNetwork;
 
 import java.util.Arrays;
@@ -34,7 +25,9 @@ public class Main {
 
         Repository<Tuple<Long, Long>, FriendRequest> repoRequest = new RequestDb(url, username, pasword, new RequestValidator());
         Repository<Long, Message> repoMessage = new MessageDb(url,username,pasword,new MessageValidator());
-        ServiceDbNetwork serv = new ServiceDbNetwork(userDbRepo, friendshipDbRepo, repoRequest, repoMessage);
+        Repository<Tuple<String,String>, LogIn> repoLogin = new LogInDb(url,username,pasword,new LogInValidator());
+
+        ServiceDbNetwork serv = new ServiceDbNetwork(userDbRepo, friendshipDbRepo, repoRequest, repoMessage, repoLogin);
         Message m = new Message(12L, Arrays.asList(3L,3L,9L),0L,"VVVV");
         m.setId(0L);
 
@@ -42,8 +35,12 @@ public class Main {
 //        Consola c = new Consola(serv);
 //        c.run();
 
-
-       MainFX.main(args);
+         /*LogIn log = new LogIn(0L);
+        log.setId(new Tuple<>("larisa@stud.ubbcluj.ro","1234567"));
+        repoLogin.save(log);
+        System.out.println(repoLogin.findOne(new Tuple<>("magdalena@stud.ubbcluj.ro","1234567")));
+       */
+        MainFX.main(args);
        // System.out.println(serv.sentRequests(3L));
 
 

@@ -6,6 +6,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import socialnetwork.domain.LogIn;
+import socialnetwork.domain.Tuple;
 import socialnetwork.domain.Utilizator;
 import socialnetwork.service.ServiceDbNetwork;
 import socialnetwork.service.ServiceException;
@@ -20,7 +22,9 @@ public class NewUserController {
     @FXML
     TextField lName;
     @FXML
-    PasswordField id;
+    TextField uName;
+    @FXML
+    TextField pass;
 
     public void setService(ServiceDbNetwork serv,Stage stage){
         this.serv=serv;
@@ -30,9 +34,14 @@ public class NewUserController {
     public void hanndleAddUser(ActionEvent actionEvent) {
         String firstname = fName.getText();
         String lastname = lName.getText();
-        Long id1=0L;
+        String username = uName.getText();
+        String passwd = pass.getText();
         try{
-             id1 = Long.parseLong(id.getText());
+            LogIn log = new LogIn(0L);
+            log.setId(new Tuple<>(username,passwd));
+            serv.addLog(log);
+
+            Long id1 = serv.findLogID(username,passwd);
             Utilizator u = new Utilizator(firstname,lastname);
             u.setId(id1);
             serv.addUtilizator(u);

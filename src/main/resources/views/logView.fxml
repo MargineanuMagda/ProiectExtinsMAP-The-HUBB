@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0"
+            prefWidth="600.0"
+            stylesheets="@../css/style.css"
+            xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="socialnetwork.controller.LogController">
+    <HBox>
+        <Label text="       "/>
+        <VBox>
+            <Label prefHeight="30"/>
+            <ImageView fitHeight="240.0" fitWidth="240.0" opacity="70" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@../images/LogIn.gif" />
+                </image>
+                <HBox.margin>
+                    <Insets left="20.0" />
+                </HBox.margin>
+            </ImageView>
+        </VBox>
+
+
+        <VBox alignment="CENTER">
+            <Label prefHeight="80" />
+            <Label prefHeight="30" style="-fx-font-size: 25" text="WELCOME TO" />
+            <HBox>
+                <Label prefHeight="50" style="-fx-font-size: 33" text="               THE H" />
+                <Label prefHeight="50" prefWidth="39.0" style="-fx-text-fill: #5396bd" text="UBB" />
+            </HBox>
+
+            <Label text="username" />
+            <TextField fx:id="uNume" />
+            <Label />
+            <Label text="password" />
+            <PasswordField fx:id="passwd" />
+            <Label />
+            <HBox prefWidth="280" alignment="BASELINE_RIGHT">
+                <Button fx:id="btLog" onAction="#handleLog" text="LOG IN" />
+                <Label text="    "/>
+                <Button  onAction="#handleNewUser" text="NEW USER" />
+            </HBox>
+
+        </VBox>
+    </HBox>
+
+</AnchorPane>

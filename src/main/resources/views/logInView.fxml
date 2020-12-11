@@ -11,8 +11,6 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="socialnetwork.controller.LogInController"
             stylesheets="@../css/login.css"
-
-
             prefHeight="400.0" prefWidth="400.0">
     <VBox prefWidth="500.0" alignment="CENTER_RIGHT">
         <Label/>
