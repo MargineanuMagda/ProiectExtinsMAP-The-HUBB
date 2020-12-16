@@ -4,12 +4,16 @@ import socialnetwork.domain.Entity;
 import socialnetwork.domain.validators.Validator;
 import socialnetwork.repository.Repository;
 import socialnetwork.repository.RepositoryException;
+import socialnetwork.repository.paging.Page;
+import socialnetwork.repository.paging.Pageable;
+import socialnetwork.repository.paging.Paginator;
+import socialnetwork.repository.paging.PagingRepository;
 
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class AbstractDbRepository<ID, E extends Entity<ID>> implements Repository<ID, E> {
+public abstract class AbstractDbRepository<ID, E extends Entity<ID>> implements PagingRepository<ID, E> {
     protected String url;
     protected String username;
     protected String password;
@@ -170,5 +174,11 @@ public abstract class AbstractDbRepository<ID, E extends Entity<ID>> implements 
             e.printStackTrace();
         }
         return 0;
+    }
+
+    @Override
+    public Page<E> findAll(Pageable pageable) {
+        Paginator<E> paginator = new Paginator<>(pageable,this.findAll());
+        return paginator.paginate();
     }
 }

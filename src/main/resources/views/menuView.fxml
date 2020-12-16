@@ -68,6 +68,14 @@
                     </columns>
 
                 </TableView>
+                <Pagination  fx:id="pagFriends" prefWidth="200.0" pageCount="10" onMouseClicked="#handleChangePage" >
+
+                </Pagination>
+                <HBox>
+                    <Label style="-fx-font-size: 15" text="Elements on a page"/>
+                    <Spinner fx:id="nrOnPages" onMouseClicked="#handlePages" min="1" max="15" initialValue="5"/>
+                </HBox>
+
             </children>
 
         </VBox>
@@ -96,6 +104,7 @@
                 </TableView>
 
             </HBox>
+            <Pagination  fx:id="pagReq" prefWidth="200.0" pageCount="10" onMouseClicked="#handleChangePage1" />
 
         </VBox>
 

@@ -6,7 +6,7 @@
    -fx-background-color: gray;
 }
 .root{
-    -fx-background-color: linear-gradient(#073b45, #011c21);
+    -fx-background-color: linear-gradient(#011c21,#073b45);
 
     -fx-background-image: url(../images/back2.png);
 }
@@ -98,4 +98,35 @@
 }
 .tab-pane{
     -fx-background-color: #06181f;
+}
+
+.pagination > .pagination-control > .control-box > .number-button:hover,
+.pagination > .pagination-control > .control-box > .bullet-button:hover,
+.pagination > .pagination-control > .control-box > .left-arrow-button:hover,
+.pagination > .pagination-control > .control-box > .right-arrow-button:hover {
+    -fx-background-insets: 0;
+    -fx-background-color: linear-gradient(#2cb7c9, wheat);
+}
+
+/* Selected toggle color */
+.pagination > .pagination-control > .control-box > .number-button:selected,
+.pagination > .pagination-control > .control-box > .bullet-button:selected{
+    -fx-background-insets: 0;
+    -fx-background-color: #06181f;
+    -fx-text-fill: wheat;
+}
+.pagination > .pagination-control > .control-box {
+    -fx-spacing: 0.5;
+}
+
+/* You can control the actual button sizes here */
+.pagination > .pagination-control > .control-box > .number-button,
+.pagination > .pagination-control > .control-box > .bullet-button,
+.pagination > .pagination-control > .control-box > .left-arrow-button,
+.pagination > .pagination-control > .control-box > .right-arrow-button {
+    -fx-background-insets: 0, 1;
+    -fx-background-color: #073b45;
+    -fx-text-fill: white;
+    -fx-min-width: 25;
+    -fx-min-height: 25;
 }

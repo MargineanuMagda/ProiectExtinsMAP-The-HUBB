@@ -6,6 +6,7 @@ import socialnetwork.domain.*;
 import socialnetwork.domain.validators.*;
 import socialnetwork.repository.Repository;
 import socialnetwork.repository.database.*;
+import socialnetwork.repository.paging.PagingRepository;
 import socialnetwork.service.ServiceDbNetwork;
 
 import java.util.Arrays;
@@ -20,16 +21,17 @@ public class Main {
         final String url = "jdbc:postgresql://localhost:5432/retea";
         final String username = "postgres";
         final String pasword = "postgres";
-        Repository<Long, Utilizator> userDbRepo = new UtilizatorDb(url, username, pasword, new UtilizatorValidator());
+        PagingRepository<Long, Utilizator> userDbRepo = new UtilizatorDb(url, username, pasword, new UtilizatorValidator());
         FriendshipDb friendshipDbRepo = new FriendshipDb(url, username, pasword, new FrienshipValidator());
 
-        Repository<Tuple<Long, Long>, FriendRequest> repoRequest = new RequestDb(url, username, pasword, new RequestValidator());
-        Repository<Long, Message> repoMessage = new MessageDb(url,username,pasword,new MessageValidator());
-        Repository<Tuple<String,String>, LogIn> repoLogin = new LogInDb(url,username,pasword,new LogInValidator());
+        PagingRepository<Tuple<Long, Long>, FriendRequest> repoRequest = new RequestDb(url, username, pasword, new RequestValidator());
+        PagingRepository<Long, Message> repoMessage = new MessageDb(url,username,pasword,new MessageValidator());
+        PagingRepository<Tuple<String,String>, LogIn> repoLogin = new LogInDb(url,username,pasword,new LogInValidator());
 
         ServiceDbNetwork serv = new ServiceDbNetwork(userDbRepo, friendshipDbRepo, repoRequest, repoMessage, repoLogin);
-        Message m = new Message(12L, Arrays.asList(3L,3L,9L),0L,"VVVV");
-        m.setId(0L);
+
+        serv.setPageSize(3);
+        serv.getNextFriendshipsOnPage(0).forEach(x-> System.out.println(x));
 
         //serv.sentNewMessage(m);
 //        Consola c = new Consola(serv);

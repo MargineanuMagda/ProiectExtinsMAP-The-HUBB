@@ -6,6 +6,10 @@ import socialnetwork.domain.*;
 import socialnetwork.repository.Repository;
 import socialnetwork.repository.RepositoryException;
 import socialnetwork.repository.database.FriendshipDb;
+import socialnetwork.repository.paging.Page;
+import socialnetwork.repository.paging.Pageable;
+import socialnetwork.repository.paging.PageableClass;
+import socialnetwork.repository.paging.Paginator;
 import socialnetwork.utils.Utils;
 import socialnetwork.utils.events.ChangeEventType;
 import socialnetwork.utils.events.UserChangeEvent;
@@ -312,6 +316,13 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
                 .collect(Collectors.toList());
     }
 
+    public List<Utilizator> getUserFriends1(Long l1,int size){
+        if(repoUsers.findOne(l1) == null)
+            throw new RepositoryException("User inexistent!\n");
+        return repoFriendship.getFriends(l1).stream()
+                .map(repoUsers::findOne)
+                .collect(Collectors.toList());
+    }
     /**
      * filter user s friends by month
      *
@@ -390,11 +401,12 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
      * @return user's requests
      */
     public List<FriendRequest> userRequest(Long id){
-        List<FriendRequest> friendRequests = new ArrayList<>();
-        repoRequest.findAll().forEach(friendRequests::add);
-        return friendRequests.stream()
+
+        List<FriendRequest> friendRequests = StreamSupport.stream(repoRequest.findAll().spliterator(),false)
                 .filter(x->x.getId().getRight().equals(id))
+
                 .collect(Collectors.toList());
+        return friendRequests;
 
     }
     public List<FriendRequest> sentRequests(Long id) {
@@ -667,10 +679,7 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
                 .filter(x->{
                     if (x.getUserTo().contains(mainUser.getId()) && x.getUserFrom().equals(friend.getId()))
                         return true;
-                    else if ((x.getUserTo().contains(friend.getId()) && x.getUserFrom().equals(mainUser.getId())))
-                        return true;
-                    else
-                        return false;
+                    else return x.getUserTo().contains(friend.getId()) && x.getUserFrom().equals(mainUser.getId());
                 })
                 .filter(x-> x.getDate().isAfter(LocalDateTime.of(date1, LocalTime.now())) && x.getDate().isBefore(LocalDateTime.of(date2, LocalTime.now())))
                 .forEach(x-> listM.add("DATE     "+ x.getDate().format(Utils.myFormatObj)+"    FROM:     "+repoUsers.findOne(x.getUserFrom()) + "      MESSAGE:    "+x.getMesaj() ));
@@ -699,5 +708,38 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
 
     public LogIn findLog(Tuple<String, String> stringStringTuple) {
         return  repoLogin.findOne(stringStringTuple);
+    }
+    //paging
+
+    private int page =0;
+    private int size = 1;
+    private Pageable pageable;
+
+    public void setPageSize(int size){this.size=size;}
+
+
+
+    public Set<Prietenie> getNextFriendshipsOnPage(int page) {
+        this.page = page;
+        Pageable pageable = new PageableClass(page,this.size);
+        Page<Prietenie> friendReqPage = repoFriendship.findAll(pageable);
+        return friendReqPage.getContent().collect(Collectors.toSet());
+    }
+
+    public Set<Utilizator> getNextFriendOnPage(int page,long id){
+        this.page=page;
+        Pageable pageable = new PageableClass(page,this.size);
+        Paginator<Utilizator> paginator = new Paginator<>(pageable,this.getUserFriends1(id));
+        Page<Utilizator> friendPage = paginator.paginate();
+        return friendPage.getContent().collect(Collectors.toSet());
+    }
+
+
+    public Set<FriendRequest> getNextRequestOnPage(int page,long id){
+        this.page=page;
+        Pageable pageable = new PageableClass(page,this.size);
+        Paginator<FriendRequest> paginator = new Paginator<>(pageable,this.userRequest(id));
+        Page<FriendRequest> friendPage = paginator.paginate();
+        return friendPage.getContent().collect(Collectors.toSet());
     }
 }

@@ -2,6 +2,8 @@ package socialnetwork.repository.database;
 
 import socialnetwork.domain.Utilizator;
 import socialnetwork.domain.validators.Validator;
+import socialnetwork.repository.paging.Page;
+import socialnetwork.repository.paging.Pageable;
 
 import java.sql.*;
 
@@ -53,6 +55,7 @@ public class UtilizatorDb extends AbstractDbRepository<Long, Utilizator> {
     protected PreparedStatement updateQuery(Utilizator entity, Connection connection) throws SQLException {
         return connection.prepareStatement("UPDATE  users SET firstname = '"+entity.getFirstName()+"',lastname = '" + entity.getLastName()+"' WHERE idU = "+entity.getId());
     }
+
 
 
 }

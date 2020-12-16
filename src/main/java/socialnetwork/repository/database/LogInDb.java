@@ -3,6 +3,8 @@ package socialnetwork.repository.database;
 import socialnetwork.domain.LogIn;
 import socialnetwork.domain.Tuple;
 import socialnetwork.domain.validators.Validator;
+import socialnetwork.repository.paging.Page;
+import socialnetwork.repository.paging.Pageable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -53,4 +55,6 @@ public class LogInDb extends AbstractDbRepository<Tuple<String,String>, LogIn> {
     protected PreparedStatement updateQuery(LogIn entity, Connection connection) throws SQLException {
         return null;
     }
+
+
 }

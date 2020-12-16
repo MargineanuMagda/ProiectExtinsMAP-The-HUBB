@@ -2,6 +2,8 @@ package socialnetwork.repository.database;
 
 import socialnetwork.domain.Message;
 import socialnetwork.domain.validators.Validator;
+import socialnetwork.repository.paging.Page;
+import socialnetwork.repository.paging.Pageable;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -100,6 +102,7 @@ public class MessageDb extends AbstractDbRepository<Long, Message> {
         return connection.prepareStatement("UPDATE  users SET mesaj = '"+entity.getMesaj()+"',reply = " + entity.getReply()+" WHERE idF = "+entity.getId());
 
     }
+
 
 
 }

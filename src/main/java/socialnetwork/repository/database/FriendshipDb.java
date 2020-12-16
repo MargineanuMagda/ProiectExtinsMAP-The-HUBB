@@ -3,6 +3,8 @@ package socialnetwork.repository.database;
 import socialnetwork.domain.Prietenie;
 import socialnetwork.domain.Tuple;
 import socialnetwork.domain.validators.Validator;
+import socialnetwork.repository.paging.Page;
+import socialnetwork.repository.paging.Pageable;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -84,4 +86,6 @@ public class FriendshipDb extends AbstractDbRepository<Tuple<Long, Long>, Priete
         }
         return null;
     }
+
+
 }

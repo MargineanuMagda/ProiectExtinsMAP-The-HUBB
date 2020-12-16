@@ -71,6 +71,15 @@ public class UserController implements Observer<UserChangeEvent> {
     @FXML
     Button rmFBtn;
 
+    @FXML
+    Spinner<Integer> nrOnPages;
+
+    @FXML
+    Pagination pagFriends;
+    @FXML
+    Pagination pagReq;
+
+
     public void setService(ServiceDbNetwork serv, Utilizator user, Stage dialogStage){
 
         this.serv = serv;
@@ -79,8 +88,10 @@ public class UserController implements Observer<UserChangeEvent> {
         serv.addObserver(this);
         initModel();
         initiate();
-        initiateFriends();
-        initiateRequests();
+        initiateFriends(0);
+        initiateRequests(0);
+
+
     }
 
     private void initModel() {
@@ -97,12 +108,12 @@ public class UserController implements Observer<UserChangeEvent> {
     }
 
     @FXML
-    public void handleLogIn(ActionEvent actionEvent) {
+    public void handleLogIn() {
         try {
             FXMLLoader loader = new FXMLLoader();
 
             loader.setLocation(getClass().getResource("/views/logView.fxml"));
-            AnchorPane root = (AnchorPane) loader.load();
+            AnchorPane root =  loader.load();
 
             //Stage
             Stage dialogStage = new Stage();
@@ -124,14 +135,15 @@ public class UserController implements Observer<UserChangeEvent> {
 
 
 
-    private void initiateRequests() {
+    private void initiateRequests(int currentPage) {
         Utilizator user = mainUser;
-        Iterable<FriendRequest> req = serv.userRequest(user.getId());
+        pagReq.setPageCount(serv.userRequest(user.getId()).size()/nrOnPages.getValue()+1);
+        Iterable<FriendRequest> req = serv.getNextRequestOnPage(currentPage,user.getId());
         List<FriendRequest> reqList = StreamSupport.stream(req.spliterator(),false).collect(Collectors.toList());
         modelRequests.setAll(reqList);
 
         nameR.setCellValueFactory(c->new SimpleStringProperty(serv.getUser(c.getValue().getId().getLeft()).toString()));
-
+        //nameR.setCellValueFactory(new PropertyValueFactory<>("Id"));
         statusR.setCellValueFactory(new PropertyValueFactory<>("Status"));
         dataR.setCellValueFactory(new PropertyValueFactory<>("Data"));
         requests.setItems(modelRequests);
@@ -140,10 +152,15 @@ public class UserController implements Observer<UserChangeEvent> {
 
 
 
-    private void initiateFriends() {
+    private void initiateFriends(int currentPage) {
         Utilizator user = mainUser;
-        Iterable<Utilizator> users = serv.getUserFriends1(user.getId());
+        int pag = nrOnPages.getValue();
+        serv.setPageSize(pag);
+
+        Iterable<Utilizator> users = serv.getNextFriendOnPage(currentPage,user.getId());
+
         List<Utilizator> usersList = StreamSupport.stream(users.spliterator(),false).collect(Collectors.toList());
+        pagFriends.setPageCount(serv.getUserFriends1(user.getId()).size()/pag+1);
         modelFriends.setAll(usersList);
         firstname.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         lastname.setCellValueFactory(new PropertyValueFactory<>("lastName"));
@@ -152,9 +169,7 @@ public class UserController implements Observer<UserChangeEvent> {
         List<Utilizator> userList1= StreamSupport.stream(serv.getAllUsers().spliterator(),false).collect(Collectors.toList());
         List<Utilizator> notFriends=userList1.stream()
                 .filter(x->{
-                    if(x.getId()!=user.getId() && serv.findFriendship(x.getId(),user.getId()) == false)
-                        return true;
-                    else return false;
+                    return x.getId() != user.getId() && serv.findFriendship(x.getId(), user.getId()) == false;
                 })
                 .collect(Collectors.toList());
         //System.out.println(notFriends);
@@ -266,8 +281,8 @@ public class UserController implements Observer<UserChangeEvent> {
     public void update(UserChangeEvent userChangeEvent) {
         //initiate();
        // initModel();
-        initiateFriends();
-        initiateRequests();
+        initiateFriends(0);
+        initiateRequests(0);
     }
 
     public void handleMessages(ActionEvent actionEvent) {
@@ -353,6 +368,26 @@ public class UserController implements Observer<UserChangeEvent> {
         dialogStage.setScene(scene);
 
         dialogStage.show();
+    }
+
+    public void handlePages(MouseEvent mouseEvent) {
+        Integer number = nrOnPages.getValue();
+
+        serv.setPageSize(number);
+        initiateFriends(0);
+        initiateRequests(0);
+    }
+
+    public void handleChangePage(MouseEvent mouseEvent) {
+        System.out.println("AM SCHIMBAT PAGINA");
+        int paginaCurenta = pagFriends.getCurrentPageIndex();
+
+        initiateFriends(paginaCurenta);
+    }
+
+    public void handleChangePage1(MouseEvent mouseEvent) {
+        int paginaCurenta = pagReq.getCurrentPageIndex();
+        initiateRequests(paginaCurenta);
     }
 }
 

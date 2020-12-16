@@ -4,6 +4,8 @@ import socialnetwork.domain.FriendRequest;
 import socialnetwork.domain.Prietenie;
 import socialnetwork.domain.Tuple;
 import socialnetwork.domain.validators.RequestValidator;
+import socialnetwork.repository.paging.Page;
+import socialnetwork.repository.paging.Pageable;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -38,10 +40,10 @@ public class RequestDb extends AbstractDbRepository<Tuple<Long,Long>, FriendRequ
         Long id2 = resultSet.getLong("userTo");
         String status = resultSet.getString("status");
         LocalDate data = resultSet.getDate("dataR").toLocalDate();
-        LocalDateTime data1 = LocalDateTime.of(data, LocalTime.now());
 
 
-        FriendRequest request = new FriendRequest(status,data1);
+
+        FriendRequest request = new FriendRequest(status,data);
         request.setId(new Tuple<>(id1,id2));
         return request;
     }
@@ -94,6 +96,7 @@ public class RequestDb extends AbstractDbRepository<Tuple<Long,Long>, FriendRequ
         return connection.prepareStatement("UPDATE  friendrequest SET status = '" + entity.getStatus() + "' WHERE userFrom = " + entity.getId().getLeft().toString() + " AND userTo =" + entity.getId().getRight().toString());
 
     }
+
 
 
 }
