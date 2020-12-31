@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="socialnetwork.controller.UserController"
+            stylesheets="@../css/style.css"
+            prefHeight="700.0" prefWidth="1100.0">
+    <TabPane stylesheets="@../css/tabPane.css" prefHeight="750.0" prefWidth="1100.0" rotateGraphic="true"
+             side="LEFT" tabClosingPolicy="UNAVAILABLE">
+
+
+        <!--TAB YOUR PROFILE-->
+
+
+        <Tab text="Your profile">
+            <graphic>
+                <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                    <HBox.margin>
+                        <Insets left="10.0"/>
+                    </HBox.margin>
+                    <Image url="@../images/network.png"/>
+                </ImageView>
+            </graphic>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="700" prefWidth="900">
+                <HBox>
+                    <Label text="       "/>
+                    <VBox>
+
+                        <Label/>
+                        <HBox>
+                            <ImageView onMouseClicked="#handleLogOut" fitHeight="70.0" fitWidth="82.0"
+                                       pickOnBounds="true"
+                                       preserveRatio="true">
+                                <HBox.margin>
+                                    <Insets left="20.0"/>
+                                </HBox.margin>
+                                <Image url="@../images/network.png"/>
+                            </ImageView>
+                            <HBox>
+                                <Label text=" THE H" style="-fx-font-size: 30" prefHeight="50.0">
+
+                                </Label>
+                                <Label text="UBB" style="-fx-text-fill:#5396bd" prefHeight="50.0">
+
+                                </Label>
+                            </HBox>
+
+
+                        </HBox>
+
+                        <Label prefHeight="10"/>
+                        <Label text="HELLO,"/>
+                        <Label fx:id="lbl"/>
+                        <Label prefHeight="25"/>
+                        <HBox>
+                            <ImageView fitHeight="30.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
+                                <HBox.margin>
+                                    <Insets left="10.0"/>
+                                </HBox.margin>
+                                <Image url="@../images/64508.png"/>
+                            </ImageView>
+                            <Label stylesheets="@../css/style.css" text="  FRIENDS" alignment="CENTER_RIGHT"
+                                   prefHeight="40">
+
+                            </Label>
+                        </HBox>
+
+                        <TableView fx:id="friends">
+                            <columns>
+                                <TableColumn prefWidth="150" text="FIRSTNAME" fx:id="firstname"/>
+                                <TableColumn prefWidth="150" text="LASTNAME" fx:id="lastname"/>
+                            </columns>
+
+                        </TableView>
+                        <Pagination fx:id="pagFriends" prefWidth="200.0" pageCount="10"
+                                    onMouseClicked="#handleChangePage">
+
+                        </Pagination>
+                        <HBox>
+                            <Label style="-fx-font-size: 15" text="Elements on a page"/>
+                            <Spinner fx:id="nrOnPages" onMouseClicked="#handlePages" min="1" max="15" initialValue="5"/>
+                        </HBox>
+
+                    </VBox>
+                    <Label text="   "/>
+                    <VBox>
+                        <Label/>
+                        <Label/>
+                        <ComboBox stylesheets="@../css/login.css" fx:id="newFriend" prefHeight="50.0" prefWidth="380"
+                                  promptText="/search the name of a new friend">
+                        </ComboBox>
+
+
+                        <HBox>
+                            <VBox>
+                                <Label prefHeight="60"/>
+                                <Label text="      RECEIVED FRIEND REQUESTS" stylesheets="@../css/style.css"
+                                       alignment="CENTER"
+                                       prefHeight="50.0"/>
+
+                            </VBox>
+                            <Label text="       "/>
+
+                            <VBox prefWidth="150">
+                                <Label prefHeight="25"/>
+                                <Button fx:id="addFBtn" onAction="#handeSendRequest" text="ADD NEW FRIEND" opacity="0.8"
+                                        prefHeight="30" prefWidth="150"/>
+                                <Label prefHeight="15"/>
+                                <Button fx:id="rmFBtn" onAction="#handleRmFriend" text="REMOVE FRIEND" opacity="0.8"
+                                        prefHeight="30"
+                                        prefWidth="150"/>
+
+                            </VBox>
+                        </HBox>
+
+
+                        <Label prefHeight="15"/>
+                        <HBox>
+                            <TableView onMouseClicked="#handleRequest" fx:id="requests"
+                                       stylesheets="@../css/style.css">
+                                <columns>
+                                    <TableColumn text="NAME" prefWidth="300" fx:id="nameR"/>
+                                    <TableColumn text="STATUS" fx:id="statusR"/>
+                                    <TableColumn text="DATA" prefWidth="100" fx:id="dataR"/>
+                                </columns>
+
+                            </TableView>
+
+                        </HBox>
+                        <Pagination fx:id="pagReq" prefWidth="200.0" pageCount="10"
+                                    onMouseClicked="#handleChangePage1"/>
+
+                    </VBox>
+
+                    <Label text="       "/>
+                </HBox>
+            </AnchorPane>
+        </Tab>
+
+
+
+
+        <!--TAB MESAJE-->
+
+
+
+
+        <Tab text="Messages">
+            <graphic>
+                <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                    <HBox.margin>
+                        <Insets left="10.0"/>
+                    </HBox.margin>
+                    <Image url="@../images/mess.png"/>
+                </ImageView>
+            </graphic>
+            <AnchorPane xmlns="http://javafx.com/javafx"
+                        xmlns:fx="http://javafx.com/fxml"
+
+                        stylesheets="@../css/style.css"
+
+                        prefHeight="400.0" prefWidth="900.0">
+                <HBox>
+                    <Label text="       "/>
+                    <VBox>
+                    <MenuBar prefWidth="900">
+                        <Menu text="INBOX">
+                            <MenuItem onAction="#handleReceived" text="RECEIVED"/>
+                            <MenuItem onAction="#handleSent" text="SENT"/>
+                        </Menu>
+                        <Menu text="NEW MESSAGE"/>
+                    </MenuBar>
+                    <HBox>
+                        <VBox>
+
+
+                            <HBox>
+                                <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true"
+                                           preserveRatio="true">
+                                    <HBox.margin>
+                                        <Insets left="10.0"/>
+                                    </HBox.margin>
+                                    <Image url="@../images/L2cq.gif"/>
+                                </ImageView>
+                                <Label text="       "/>
+                                <Label prefHeight="100" text="HELLO!"/>
+                            </HBox>
+
+                            <TableView onMouseClicked="#handleShowConv" fx:id="table" prefWidth="600.0">
+                                <columns>
+                                    <TableColumn prefWidth="150" fx:id="from" text="FROM"/>
+                                    <TableColumn prefWidth="150" fx:id="date" text="DATA"/>
+                                    <TableColumn prefWidth="300" fx:id="subj" text="SUBJECT"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+                        <Label text="       "/>
+                        <VBox>
+                            <Label prefHeight="50"/>
+                            <ComboBox fx:id="toCombobox" onAction="#handleNewUserTo"/>
+                            <Label text="TO"/>
+                            <TextField fx:id="toField"/>
+                            <Label prefHeight="50"/>
+                            <Label text="Message"/>
+
+                            <TextArea fx:id="text" prefWidth="200"/>
+                            <Label prefHeight="50"/>
+                            <Button text="SEND" onAction="#handleNewMsg"/>
+                            <Button text="REMOVE ALL USERS TO" onAction="#handleRemove"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                </HBox>
+
+
+            </AnchorPane>
+        </Tab>
+
+
+
+
+       <!-- TAB SENT REQUESTS-->
+
+
+
+
+        <Tab text="Sent requests">
+            <graphic>
+                <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                    <HBox.margin>
+                        <Insets left="10.0"/>
+                    </HBox.margin>
+                    <Image url="@../images/sentReq.png"/>
+                </ImageView>
+            </graphic>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <HBox>
+                    <Label text="       "/>
+                    <VBox>
+                        <Label prefHeight="50" text="SENT REQUESTS FROM"/>
+                        <Label fx:id="userLbl" prefHeight="50"/>
+                        <TableView fx:id="requestsSENT">
+                            <columns>
+                                <TableColumn fx:id="to" prefWidth="150" text="TO"/>
+                                <TableColumn fx:id="status" prefWidth="150" text="STATUS"/>
+                                <TableColumn fx:id="dataR1" prefWidth="150" text="DATA"/>
+                            </columns>
+
+                        </TableView>
+
+                    </VBox>
+                    <VBox>
+                        <Label prefHeight="150"/>
+                        <HBox>
+                            <Label text="           "/>
+                            <Button onAction="#handleRmReq" text="REMOVE REQUEST" prefHeight="50" prefWidth="150"/>
+                        </HBox>
+
+                    </VBox>
+                </HBox>
+            </AnchorPane>
+        </Tab>
+
+
+
+        <!--TAB RAPOARTE-->
+
+
+
+        <Tab text="Raports">
+            <graphic>
+                <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" >
+                    <HBox.margin>
+                        <Insets left="10.0"/>
+                    </HBox.margin>
+                    <Image url="@../images/raports.png"/>
+                </ImageView>
+            </graphic>
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" >
+                    <HBox>
+                        <Label text="           "/>
+                        <VBox>
+                            <Label/>
+                            <HBox>
+                                <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../images/gif2.gif" />
+                                    </image>
+                                    <HBox.margin>
+                                        <Insets left="10.0" />
+                                    </HBox.margin>
+                                </ImageView>
+                                <Label text="       " />
+                                <Label fx:id="lbl3" prefHeight="100" text="HELLO!" />
+                            </HBox>
+                            <TabPane side="LEFT" prefHeight="300.0" prefWidth="500.0" tabClosingPolicy="UNAVAILABLE" stylesheets="@../css/style.css">
+                                <tabs>
+                                    <Tab text="RAPORT 1">
+                                        <content>
+                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                            <VBox alignment="CENTER">
+                                                <HBox>
+                                                    <VBox>
+                                                        <Label text="First date" />
+                                                        <DatePicker fx:id="date1"/>
+                                                    </VBox>
+                                                    <Label text="   " />
+                                                    <VBox>
+                                                        <Label text="Second date" />
+                                                        <DatePicker fx:id="date2" />
+                                                    </VBox>
+                                                </HBox>
+                                                <Label />
+                                                <TextField fx:id="filename1" text="/type the name of the file"/>
+                                                <Label/>
+                                                <Button onAction="#handleGenerateRap1" text="GENERATE RAPORT" />
+                                            </VBox>
+
+                                        </content>
+                                    </Tab>
+                                    <Tab text="RAPORT 2">
+                                        <content>
+                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                            <VBox alignment="CENTER">
+                                                <Label text="SELECT A FRIEND"/>
+                                                <ComboBox fx:id="comboF"/>
+                                                <HBox>
+
+                                                    <VBox>
+                                                        <Label text="First date" />
+                                                        <DatePicker fx:id="date3"/>
+                                                    </VBox>
+                                                    <Label text="   " />
+                                                    <VBox>
+                                                        <Label text="Second date" />
+                                                        <DatePicker fx:id="date4" />
+                                                    </VBox>
+                                                </HBox>
+                                                <Label />
+                                                <TextField fx:id="filename2" text="/type the name of the file"/>
+                                                <Label/>
+                                                <Button onAction="#handleGenerateRap2" text="GENERATE RAPORT" />
+                                            </VBox>
+
+                                        </content>
+                                    </Tab>
+                                </tabs>
+                            </TabPane>
+                        </VBox>
+                    </HBox>
+
+                </AnchorPane>
+            </content>
+        </Tab>
+
+
+
+
+       <!-- TAB EVENTS-->
+
+
+
+
+        <Tab text="Events">
+            <graphic>
+                <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                    <HBox.margin>
+                        <Insets left="10.0"/>
+                    </HBox.margin>
+                    <Image url="@../images/events.png"/>
+                </ImageView>
+            </graphic>
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+                <VBox>
+                    <TabPane side="LEFT" prefHeight="600.0" prefWidth="500.0" tabClosingPolicy="UNAVAILABLE" stylesheets="@../css/style.css">
+                        <tabs>
+                            <Tab text="CREATE AN EVENT">
+                                <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="200.0" />
+                                    <VBox>
+                                        <HBox>
+                                            <Label text="             "/>
+                                            <ImageView  fitWidth="500.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="@../images/1.png" />
+                                                </image>
+
+                                            </ImageView>
+                                        </HBox>
+
+                                        <HBox>
+                                            <VBox alignment="BASELINE_CENTER" prefHeight="200">
+                                                <Label prefHeight="50"/>
+                                                <ImageView fitHeight="320.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../images/ev.gif" />
+                                                    </image>
+                                                    <VBox.margin>
+                                                        <Insets left="10.0" />
+                                                    </VBox.margin>
+                                                </ImageView>
+                                                <!-- <Label text="       " />-->
+
+                                            </VBox>
+                                            <HBox>
+
+
+                                                <VBox prefWidth="400" >
+
+                                                    <Label prefHeight="35"/>
+                                                    <HBox alignment="CENTER_RIGHT">
+                                                        <ImageView  fitWidth="130.0" pickOnBounds="true" preserveRatio="true">
+                                                            <image>
+                                                                <Image url="@../images/name.png" />
+                                                            </image>
+
+                                                        </ImageView>
+                                                        <TextField fx:id="evName"/>
+                                                    </HBox>
+                                                    <Label prefHeight="30"/>
+                                                    <HBox alignment="CENTER_RIGHT">
+                                                        <ImageView  fitWidth="130.0" pickOnBounds="true" preserveRatio="true">
+                                                            <image>
+                                                                <Image url="@../images/date.png" />
+                                                            </image>
+
+                                                        </ImageView>
+                                                        <DatePicker fx:id="evDate"/>
+                                                    </HBox>
+                                                    <Label prefHeight="30"/>
+                                                    <HBox alignment="CENTER_RIGHT">
+                                                        <ImageView  fitWidth="130.0" pickOnBounds="true" preserveRatio="true">
+                                                            <image>
+                                                                <Image url="@../images/hour.png" />
+                                                            </image>
+
+                                                        </ImageView>
+                                                        <Spinner min="0" max="23"  fx:id="evHour"/>
+
+                                                    </HBox>
+                                                    <Label prefHeight="30"/>
+                                                    <HBox alignment="CENTER_RIGHT">
+                                                        <ImageView  fitWidth="130.0" pickOnBounds="true" preserveRatio="true">
+                                                            <image>
+                                                                <Image url="@../images/min.png" />
+                                                            </image>
+
+                                                        </ImageView>
+                                                        <Spinner min="0" max="59" fx:id="evMin"/>
+                                                    </HBox>
+                                                    <Label prefHeight="30"/>
+                                                    <Button  onAction="#handleCreateEvent" text="DONE"/>
+
+
+                                                </VBox>
+                                            </HBox>
+                                        </HBox>
+                                    </VBox>
+
+
+
+                                </content>
+                            </Tab>
+                            <Tab text="YOUR EVENTS">
+                                <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                    <VBox alignment="CENTER">
+                                        <Label/>
+                                        <HBox>
+                                            <Label text="       "/>
+                                            <ImageView  fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="@../images/T0WC.gif" />
+                                                </image>
+
+                                            </ImageView>
+                                            <Label text="       "/>
+                                            <VBox>
+                                                <Label/>
+                                                <ComboBox fx:id="eventCombo" stylesheets="@../css/login.css" promptText="/choose an event"/>
+                                                <Label/>
+                                                <Button onAction="#handleSubscribeEvent" text="SUBSCRIBE"/>
+                                            </VBox>
+                                        </HBox>
+                                        <ImageView  fitWidth="400.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../images/yourEv.png" />
+                                            </image>
+
+                                        </ImageView>
+                                        <HBox>
+                                            <Label text="   "/>
+                                            <TableView  fx:id="tableEvents" prefWidth="350">
+                                                <columns>
+                                                    <TableColumn prefWidth="150" fx:id="nameEvent" text="Name"/>
+                                                    <TableColumn   prefWidth="100" fx:id="dataEvent" text="Date"/>
+                                                    <TableColumn prefWidth="100" fx:id="timeEvent" text="Time"/>
+                                                </columns>
+                                            </TableView>
+                                            <Label text="       "/>
+                                            <Button  onAction="#handleUnsubscribeEvent" text="UNSUBSCRIBE"/>
+
+                                        </HBox>
+
+                                    </VBox>
+
+                                </content>
+                            </Tab>
+                        </tabs>
+                    </TabPane>
+                </VBox>
+            </content>
+        </Tab>
+    </TabPane>
+
+
+</AnchorPane>

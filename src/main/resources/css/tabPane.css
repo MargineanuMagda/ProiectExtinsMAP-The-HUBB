@@ -1,0 +1,56 @@
+
+.tab-pane.tab.text{
+    -fx-font-size: 20px;
+    -fx-font-family: Candara ;
+    -fx-alignment: center;
+//-fx-background-color: #3285a8;
+    -fx-font-weight:bold;
+    -fx-text-fill: wheat;
+    -fx-background-color: #06181f;
+}
+.tab-pane{
+    -fx-background-color: transparent;
+}
+.tab *.tab-label {
+    -fx-rotate: 90;
+
+
+}
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-opacity: 0;
+}
+
+.tab-pane
+{
+    -fx-tab-min-width:90px;
+}
+
+.tab{
+    -fx-background-insets: 0 1 0 1,0,0;
+}
+.tab-pane .tab
+{
+    -fx-background-color: gray;
+
+}
+
+.tab-pane .tab:selected
+{
+    -fx-background-color: #3c3c3c;
+}
+
+.tab .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: wheat;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+.tab-pane:top *.tab-header-area {
+    -fx-background-insets: 0, 0 0 1 0;
+    /* -fx-padding: 0.416667em 0.166667em 0.0em 0.833em; /* 5 2 0 10 */
+    -fx-padding: 0.416667em 0.166667em 0.0em 0.0em; /* overridden as 5 2 0 0 */
+}
+.tab {
+
+    -fx-padding: 7em 0.3em 8em 0.3em;
+}

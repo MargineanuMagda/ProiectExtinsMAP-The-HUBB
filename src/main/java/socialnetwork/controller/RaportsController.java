@@ -26,7 +26,7 @@ public class RaportsController {
     @FXML
     DatePicker date4;
     @FXML
-    Label lbl;
+    Label lbl3;
     @FXML
     TextField filename1;
     @FXML
@@ -38,7 +38,7 @@ public class RaportsController {
         this.serv = serv;
         this.mainUser = user;
         this.mainStage=dialogStage;
-        lbl.setText("HELLO "+ mainUser.toString()+" !");
+        lbl3.setText("HELLO "+ mainUser.toString()+" !");
         ObservableList<Utilizator> friends = FXCollections.observableArrayList();
         friends.setAll(new ArrayList<>(serv.getUserFriends1(mainUser.getId())));
         comboF.setItems(friends);

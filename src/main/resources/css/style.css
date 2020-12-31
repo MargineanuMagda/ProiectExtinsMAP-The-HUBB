@@ -52,6 +52,9 @@
     //-fx-background-image: url(../images/L2cq.gif);
 
 }
+.table-cell {
+    -fx-text-fill:#dadebd gray;
+}
 .table-view .column-header,
 .table-view .column-header-background .filler {
     -fx-background-color:  #06181f;
@@ -86,18 +89,6 @@
     -fx-alignment: center;
     -fx-font-style: italic;
     -fx-text-fill: wheat;
-}
-.tab-pane.tab.text{
-    -fx-font-size: 20px;
-    -fx-font-family: Candara ;
-    -fx-alignment: center;
-//-fx-background-color: #3285a8;
-    -fx-font-weight:bold;
-    -fx-text-fill: wheat;
-    -fx-background-color: #06181f;
-}
-.tab-pane{
-    -fx-background-color: #06181f;
 }
 
 .pagination > .pagination-control > .control-box > .number-button:hover,

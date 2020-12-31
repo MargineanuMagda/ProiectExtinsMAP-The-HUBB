@@ -17,7 +17,7 @@
                 </HBox.margin>
             </ImageView>
             <Label text="       " />
-            <Label fx:id="lbl" prefHeight="100" text="HELLO!" />
+            <Label fx:id="lbl3" prefHeight="100" text="HELLO!" />
         </HBox>
         <TabPane prefHeight="300.0" prefWidth="500.0" tabClosingPolicy="UNAVAILABLE">
             <tabs>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
@@ -23,8 +24,16 @@
         <Label />
         <Button alignment="CENTER_LEFT" onAction="#handleNewUser" text="NEW USER" />
         <Text />
-      <Pagination prefHeight="200.0" prefWidth="200.0" pageCount="10" stylesheets="@../css/style.css"/>
+      <AmbientLight color="CHARTREUSE" lightOn="true" />
+      <DatePicker>
+
+      </DatePicker>
+      <Spinner max="23" min="0" />
+      <Spinner max="59" min="00" />
+      
+      <Pagination pageCount="10" prefHeight="200.0" prefWidth="200.0" stylesheets="@../css/style.css" />
         <Button alignment="CENTER" onAction="#handleLogIn" text="   LOG IN   " />
     </VBox>
+   
 
 </AnchorPane>

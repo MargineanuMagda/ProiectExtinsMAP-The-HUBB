@@ -34,6 +34,7 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
     private final Repository<Tuple<Long,Long>, FriendRequest> repoRequest;
     private final Repository<Long,Message> repoMessage;
     private final Repository<Tuple<String,String>, LogIn> repoLogin;
+    private final Repository<String,Event> repoEvents;
 
     //Graph structure used for finding comunities
     //dictionar ce creeaza o relatie de 1-1 intre noduri si id urile userilor
@@ -44,7 +45,7 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
     private Boolean[] visited;
 
 
-    public ServiceDbNetwork(Repository<Long, Utilizator> repo, FriendshipDb repo1, Repository<Tuple<Long, Long>, FriendRequest> repoRequest, Repository<Long, Message> repoMessage, Repository<Tuple<String, String>, LogIn> repoLogin) {
+    public ServiceDbNetwork(Repository<Long, Utilizator> repo, FriendshipDb repo1, Repository<Tuple<Long, Long>, FriendRequest> repoRequest, Repository<Long, Message> repoMessage, Repository<Tuple<String, String>, LogIn> repoLogin, Repository<String, Event> repoEvents) {
         this.repoUsers = repo;
         this.repoFriendship = repo1;
         this.repoRequest = repoRequest;
@@ -52,6 +53,7 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
 
 
         this.repoLogin = repoLogin;
+        this.repoEvents = repoEvents;
     }
 
 
@@ -741,5 +743,37 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
         Paginator<FriendRequest> paginator = new Paginator<>(pageable,this.userRequest(id));
         Page<FriendRequest> friendPage = paginator.paginate();
         return friendPage.getContent().collect(Collectors.toSet());
+    }
+
+    //create an event
+    public void createEvent(Event event) {
+        Event ev = repoEvents.save(event);
+        if (ev != null)
+            throw new ServiceException("ID existent!\n");
+        else{
+            notifyObservers(new UserChangeEvent(ChangeEventType.CREATE_EVENT,null));
+        }
+
+    }
+
+    public Iterable<Event> getAllEvents() {
+        return repoEvents.findAll();
+    }
+
+    public List<Event> getUsersEvents(Long id) {
+        List<Event> myEvents = new ArrayList<>();
+        repoEvents.findAll().forEach(x->{
+            if ( x.getParticipants().contains(id))
+                myEvents.add(x);
+        });
+        return myEvents;
+    }
+
+    public Event updateEvent(Event event) {
+
+        Event ev =  repoEvents.update(event);
+        notifyObservers(new UserChangeEvent(ChangeEventType.UPDATE_EVENT,null));
+        return ev;
+
     }
 }

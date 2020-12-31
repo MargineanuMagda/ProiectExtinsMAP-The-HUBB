@@ -42,7 +42,7 @@ public class LogController {
                 try {
                     FXMLLoader loader = new FXMLLoader();
 
-                    loader.setLocation(getClass().getResource("/views/menuView.fxml"));
+                    loader.setLocation(getClass().getResource("/views/menuPageView.fxml"));
                     AnchorPane root = (AnchorPane) loader.load();
 
                     //Stage

@@ -55,6 +55,7 @@ public class SentRequests {
         if(removedRequest!=null){
             serv.removeRequest(removedRequest);
 
+
         }
         else{
             MessageAlert.showErrorMessage(null,"You did not select any request to remove!!");

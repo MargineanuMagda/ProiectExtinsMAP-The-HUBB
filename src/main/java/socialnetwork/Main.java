@@ -4,16 +4,19 @@ package socialnetwork;
 import socialnetwork.config.ApplicationContext;
 import socialnetwork.domain.*;
 import socialnetwork.domain.validators.*;
-import socialnetwork.repository.Repository;
 import socialnetwork.repository.database.*;
 import socialnetwork.repository.paging.PagingRepository;
 import socialnetwork.service.ServiceDbNetwork;
+import socialnetwork.utils.events.EventReminder;
 
-import java.util.Arrays;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        String fileName = ApplicationContext.getPROPERTIES().getProperty("data.socialnetwork.users");
+       /* String fileName = ApplicationContext.getPROPERTIES().getProperty("data.socialnetwork.users");
         String fileName2 = ApplicationContext.getPROPERTIES().getProperty("data.socialnetwork.friendship");
 
 
@@ -28,11 +31,11 @@ public class Main {
         PagingRepository<Long, Message> repoMessage = new MessageDb(url,username,pasword,new MessageValidator());
         PagingRepository<Tuple<String,String>, LogIn> repoLogin = new LogInDb(url,username,pasword,new LogInValidator());
 
-        ServiceDbNetwork serv = new ServiceDbNetwork(userDbRepo, friendshipDbRepo, repoRequest, repoMessage, repoLogin);
+        ServiceDbNetwork serv = new ServiceDbNetwork(userDbRepo, friendshipDbRepo, repoRequest, repoMessage, repoLogin, repoEvents);
 
         serv.setPageSize(3);
         serv.getNextFriendshipsOnPage(0).forEach(x-> System.out.println(x));
-
+*/
         //serv.sentNewMessage(m);
 //        Consola c = new Consola(serv);
 //        c.run();
@@ -42,9 +45,14 @@ public class Main {
         repoLogin.save(log);
         System.out.println(repoLogin.findOne(new Tuple<>("magdalena@stud.ubbcluj.ro","1234567")));
        */
-        MainFX.main(args);
-       // System.out.println(serv.sentRequests(3L));
 
+       // System.out.println(serv.sentRequests(3L));
+        EventReminder ev1 = new EventReminder("Examen", LocalDateTime.of(LocalDate.now(), LocalTime.parse("22:45:00")));
+        Timer timer = new Timer(true);
+
+        timer.schedule(ev1,new GregorianCalendar(2020, 11, 30,22,31).getTime());
+
+        MainFX.main(args);
 
     }
 }

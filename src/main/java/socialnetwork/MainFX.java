@@ -6,7 +6,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import socialnetwork.config.ApplicationContext;
 import socialnetwork.controller.LogController;
-import socialnetwork.controller.LogInController;
 import socialnetwork.domain.*;
 import socialnetwork.domain.validators.*;
 import socialnetwork.repository.Repository;
@@ -38,8 +37,8 @@ public class MainFX extends Application {
         Repository<Tuple<Long, Long>, FriendRequest> repoRequest = new RequestDb(url, username, pasword, new RequestValidator());
         Repository<Long, Message> repoMessage = new MessageDb(url,username,pasword,new MessageValidator());
         Repository<Tuple<String,String>, LogIn> repoLogin = new LogInDb(url,username,pasword,new LogInValidator());
-
-        serv = new ServiceDbNetwork(userDbRepo, friendshipDbRepo, repoRequest, repoMessage, repoLogin);
+        Repository<String,Event> repoEvents = new EventDb(url,username,pasword,new EventValidator());
+        serv = new ServiceDbNetwork(userDbRepo, friendshipDbRepo, repoRequest, repoMessage, repoLogin, repoEvents);
 
         initView(primaryStage);
         //primaryStage.setWidth(800);
