@@ -22,6 +22,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import socialnetwork.domain.Event;
@@ -120,6 +121,15 @@ public class UserController implements Observer<UserChangeEvent> {
         //init events
         initiateEvents();
         initiateMyEvents();
+        myEvents.forEach(x->{
+            //doar daca evenimentele nu s au terminat vor exista remindere
+            if(x.getDate().isAfter(LocalDateTime.now())) {
+                EventReminder reminder = new EventReminder(x);
+                Timer t = new Timer(true);
+                t.schedule(reminder, new GregorianCalendar(x.getData().getYear(), x.getData().getMonthValue() - 1, x.getData().getDayOfMonth(), x.getTime().getHour() - 1, x.getTime().getMinute()).getTime());
+                myReminders.putIfAbsent(reminder, t);
+            }
+        });
 
 
     }
@@ -571,12 +581,7 @@ public class UserController implements Observer<UserChangeEvent> {
         dataEvent.setCellValueFactory(new PropertyValueFactory<>("Data"));
         timeEvent.setCellValueFactory(new PropertyValueFactory<>("Time"));
         tableEvents.setItems(myEvents);
-        myEvents.forEach(x->{
-            EventReminder reminder = new EventReminder(x);
-            Timer t = new Timer(true);
-            t.schedule(reminder,new GregorianCalendar(x.getData().getYear(),x.getData().getMonthValue()-1,x.getData().getDayOfMonth(),x.getTime().getHour()-1,x.getTime().getMinute()).getTime());
-            myReminders.putIfAbsent(reminder,t);
-        });
+
 
 
 
@@ -644,8 +649,15 @@ public class UserController implements Observer<UserChangeEvent> {
             try{
                 eventToUnsubscribe.removeParticipant(mainUser.getId());
                 serv.updateEvent(eventToUnsubscribe);
-                //Timer t = myReminders.get()
-                myReminders.remove(new EventReminder(eventToUnsubscribe));
+                final EventReminder[] key = new EventReminder[1];
+                myReminders.forEach((x,y)->{
+                    if(x.event.getName().equals( eventToUnsubscribe.getName()))
+                    {
+                        y.cancel();
+                        key[0] =x;
+                    }
+                });
+                myReminders.remove(key[0]);
                 MessageAlert.showMessage(null,Alert.AlertType.INFORMATION,"INFO","You unsubscribed to this event succesfully!");
 
             }
@@ -660,9 +672,12 @@ public class UserController implements Observer<UserChangeEvent> {
 
 }
 
+
 class EventReminder extends TimerTask{
 
     Event event;
+    AudioClip notifSound = new AudioClip("file:D:/Facultate/AN2SEM1/MAP/laborator/socialNetworkGUI/src/main/resources/sounds/notifEvents.mp3");
+
 
     public EventReminder(Event event) {
         this.event = event;
@@ -673,8 +688,8 @@ class EventReminder extends TimerTask{
 
         Platform.runLater(new Runnable() {
             public void run() {
-                String path = "D:\\Facultate\\AN2SEM1\\MAP\\laborator\\socialNetworkGUI\\src\\main\\resources\\sounds";
 
+                notifSound.play();
 
                 MessageAlert.showMessage(null, Alert.AlertType.INFORMATION,"REMINDER","You have an hour until event: " + event);
 
