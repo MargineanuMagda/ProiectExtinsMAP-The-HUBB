@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.stage.Stage;
 import socialnetwork.domain.FriendRequest;
 import socialnetwork.service.ServiceDbNetwork;
+import javafx.scene.control.Label;
 
 import java.awt.*;
 
@@ -17,8 +18,18 @@ public class RequestController {
     @FXML
     Button decBtn;
 
+    @FXML
+    Label from;
+    @FXML
+    Label status;
+    @FXML
+    Label date;
+
     public void setService(ServiceDbNetwork serv, Stage stage, FriendRequest friendRequest) {
         this.serv=serv; request=friendRequest; mainStage=stage;
+        date.setText("date:\t"+friendRequest.getData().toString());
+        status.setText("status:\t"+friendRequest.getStatus());
+        from.setText("from:\t"+serv.getUser(friendRequest.getId().getLeft()).toString());
     }
 
     public void handleAccept(ActionEvent actionEvent) {

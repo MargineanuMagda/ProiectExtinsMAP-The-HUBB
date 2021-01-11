@@ -88,14 +88,7 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
         if (userRemoved == null)
             throw new ServiceException("Service exception: ID invalid pentru stergere!\n");
 
-        //List<Utilizator> friends = userRemoved.getFriends();
-       /* repoFriendship.getFriends(ID).forEach(x -> {
-            if (ID < x)
-                repoFriendship.delete(new Tuple<>(ID, x));
-            else
-                repoFriendship.delete(new Tuple<>(x, ID));
-        });
-        */
+
         repoUsers.delete(ID);
 
     }
@@ -467,25 +460,6 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
         repoMessage.save(m);
     }
 
-    /**
-     *
-     * @param id - user's id
-     * @param mesaj - string
-     */
-    public void replyMessage(Long id, Long idUserFrom, String mesaj){
-        Message message = repoMessage.findOne(id);
-        if (message == null)
-            throw new ServiceException("Reply la mesaj invalid!!\n");
-        List<Long> toList = new ArrayList<>();
-        toList.add(message.getUserFrom());
-        message.getUserTo().forEach(x->{
-            if (!x.equals(idUserFrom))
-                toList.add(x);
-        });
-        Message reply = new Message(idUserFrom,toList,id,mesaj);
-        reply.setId(0L);
-        repoMessage.save(reply);
-    }
 
 
     public List<String> showConversation(Long id1 , Long id2){
@@ -711,6 +685,7 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
     public LogIn findLog(Tuple<String, String> stringStringTuple) {
         return  repoLogin.findOne(stringStringTuple);
     }
+
     //paging
 
     private int page =0;

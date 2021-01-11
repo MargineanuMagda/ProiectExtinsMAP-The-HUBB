@@ -11,6 +11,7 @@ import socialnetwork.domain.Tuple;
 import socialnetwork.domain.Utilizator;
 import socialnetwork.service.ServiceDbNetwork;
 import socialnetwork.service.ServiceException;
+import socialnetwork.utils.Utils;
 
 import java.io.IOException;
 
@@ -24,7 +25,9 @@ public class NewUserController {
     @FXML
     TextField uName;
     @FXML
-    TextField pass;
+    PasswordField pass;
+    @FXML
+    PasswordField passwC;
 
     public void setService(ServiceDbNetwork serv,Stage stage){
         this.serv=serv;
@@ -35,21 +38,27 @@ public class NewUserController {
         String firstname = fName.getText();
         String lastname = lName.getText();
         String username = uName.getText();
-        String passwd = pass.getText();
-        try{
-            LogIn log = new LogIn(0L);
-            log.setId(new Tuple<>(username,passwd));
-            serv.addLog(log);
+        String passwd = Utils.hash(pass.getText());
+        String passwdC = Utils.hash(passwC.getText());
+        if(passwd.equals(passwdC)){
+            try{
+                LogIn log = new LogIn(0L);
+                log.setId(new Tuple<>(username,passwd));
+                serv.addLog(log);
 
-            Long id1 = serv.findLogID(username,passwd);
-            Utilizator u = new Utilizator(firstname,lastname);
-            u.setId(id1);
-            serv.addUtilizator(u);
-            MessageAlert.showMessage(null, Alert.AlertType.INFORMATION,"INFORMATION","User added succesfully!");
-            st.close();
-        }catch (Exception e){
-            MessageAlert.showErrorMessage(null,e.getMessage());
+                Long id1 = serv.findLogID(username,passwd);
+                Utilizator u = new Utilizator(firstname,lastname);
+                u.setId(id1);
+                serv.addUtilizator(u);
+                MessageAlert.showMessage(null, Alert.AlertType.INFORMATION,"INFORMATION","User added succesfully!");
+                st.close();
+            }catch (Exception e){
+                MessageAlert.showErrorMessage(null,e.getMessage());
+            }
+        }else{
+            MessageAlert.showErrorMessage(null,"Both passwords should be the same!!");
         }
+
 
 
 

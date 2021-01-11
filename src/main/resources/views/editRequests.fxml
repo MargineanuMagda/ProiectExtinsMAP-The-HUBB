@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:id="anchor1"
+            fx:controller="socialnetwork.controller.RequestController"
+            prefHeight="300.0" prefWidth="500.0"
+            stylesheets="@../css/style.css">
+    <VBox alignment="CENTER" >
+        <Label prefHeight="30"/>
+        <Label text="We have a great news!      Look who wants to be friends " style="-fx-font-size: 15 "/>
+        <Label fx:id="from" stylesheets="@../css/label2.css" />
+        <Label  fx:id="status"/>
+        <Label  fx:id="date"/>
+        <HBox prefHeight="150"  prefWidth="500" alignment="CENTER">
+            <Button  onAction="#handleAccept" text="APPROVE REQUEST" stylesheets="@../css/style.css">
+                <graphic>
+                    <ImageView  fitHeight="65.0" fitWidth="65.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@../images/approve.png" />
+                        </image>
+                        <HBox.margin>
+                            <Insets left="10.0" />
+                        </HBox.margin>
+                    </ImageView>
+                </graphic>
+            </Button>
+            <Label text="       "></Label>
+            <Button  onAction="#handleDecline" text="REJECT REQUEST" stylesheets="@../css/style.css">
+                <graphic>
+                    <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@../images/decline.png" />
+                        </image>
+                        <HBox.margin>
+                            <Insets left="10.0" />
+                        </HBox.margin>
+                    </ImageView>
+                </graphic>
+
+            </Button>
+
+        </HBox>
+    </VBox>
+
+
+</AnchorPane>

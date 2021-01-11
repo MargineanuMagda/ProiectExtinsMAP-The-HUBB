@@ -6,6 +6,8 @@ import socialnetwork.repository.paging.Page;
 import socialnetwork.repository.paging.Pageable;
 
 import java.sql.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class UtilizatorDb extends AbstractDbRepository<Long, Utilizator> {
     public UtilizatorDb(String url, String username, String password, Validator<Utilizator> validator) {
@@ -24,9 +26,12 @@ public class UtilizatorDb extends AbstractDbRepository<Long, Utilizator> {
         Long id = resultSet.getLong("idU");
         String firstName = resultSet.getString("firstname");
         String lastName = resultSet.getString("lastname");
+        String bio = resultSet.getString("bio");
+        List<String> list = Arrays.asList(bio.split(";").clone());
 
         Utilizator utilizator = new Utilizator(firstName, lastName);
         utilizator.setId(id);
+        utilizator.setBio(list);
         return utilizator;
     }
 

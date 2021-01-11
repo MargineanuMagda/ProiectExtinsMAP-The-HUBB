@@ -31,12 +31,15 @@
 .tab-pane .tab
 {
     -fx-background-color: gray;
+    -fx-background-radius:  20px;
 
 }
 
 .tab-pane .tab:selected
 {
     -fx-background-color: #3c3c3c;
+
+    -fx-background-radius:  20px;
 }
 
 .tab .tab-label {
@@ -54,3 +57,4 @@
 
     -fx-padding: 7em 0.3em 8em 0.3em;
 }
+

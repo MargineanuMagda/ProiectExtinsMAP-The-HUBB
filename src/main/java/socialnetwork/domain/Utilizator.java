@@ -1,6 +1,7 @@
 package socialnetwork.domain;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,11 +9,54 @@ public class Utilizator extends Entity<Long>{
     private final String firstName;
     private final String lastName;
     private final List<Utilizator> friends = new ArrayList<>();
-    public Utilizator(String firstName, String lastName) {
+    private List<String> bio = Arrays.asList("","","","","","");
+
+    public Utilizator(String firstName, String lastName ) {
         this.firstName = firstName;
         this.lastName = lastName;
 
     }
+    public void setBio(List<String> list){
+        bio=list;
+    }
+    public String getSchool(){
+        return bio.get(0);
+    }
+    public void setSchool(String school){
+        bio.set(0, school);
+    }
+    public String getLiving(){
+        return bio.get(1);
+    }
+    public void setLiving(String liv){
+        bio.set(1, liv);
+    }
+
+    public String getFrom(){
+        return bio.get(2);
+    }
+    public void setFrom(String from){
+        bio.set(2, from);
+    }
+    public String getHobby(){
+        return bio.get(3);
+    }
+    public void setHobby(String s){
+        bio.set(3, s);
+    }
+    public String getSex(){
+        return bio.get(4);
+    }
+    public void setSex(String s){
+        bio.set(4, s);
+    }
+    public String getAbout(){
+        return bio.get(5);
+    }
+    public void setAbout(String s){
+        bio.set(5, s);
+    }
+
 
     public String getFirstName() {
         return firstName;

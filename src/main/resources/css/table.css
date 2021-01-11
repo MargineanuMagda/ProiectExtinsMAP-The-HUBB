@@ -1,0 +1,52 @@
+.table-row-cell{
+    -fx-background-image: url(../images/w.jpg);
+    -fx-background-size: 300px 70px;
+    -fx-pref-height: 60;
+    -fx-pref-width: 300;
+    -fx-font-size: 17px;
+    -fx-font-family: Candara ;
+//-fx-background-color: #3285a8;
+    -fx-font-weight:bold;
+    -fx-text-fill: wheat;
+    -fx-table-cell-border-color:transparent
+}
+.table-row-cell:selected{
+    -fx-background-image: url(../images/w2.jpg);
+    -fx-background-size: 300px 70px;
+    -fx-pref-height: 60;
+    -fx-pref-width: 300;
+    -fx-font-size: 17px;
+    -fx-font-family: Candara ;
+//-fx-background-color: #3285a8;
+    -fx-font-weight:bold;
+    -fx-text-fill: black;
+    -fx-table-cell-border-color:transparent
+}
+.table-view{
+    -fx-background-color: transparent;
+}
+.table-row-cell:empty{
+    -fx-opacity: 0;
+}
+.table-view .table-column {
+    -fx-alignment: CENTER-RIGHT;
+}
+#lastname{
+    -fx-alignment: CENTER_LEFT;
+}
+.table-view .column-header,
+.table-view .column-header-background .filler {
+    -fx-background-color:  #07193d;
+}
+.label{
+    -fx-text-fill: #a2e2f2;
+}
+.table-row-cell:selected {
+    -fx-background-color:transparent ;
+
+}
+.table-row-cell:selected .text {
+    -fx-fill: #ffffff;
+
+
+}

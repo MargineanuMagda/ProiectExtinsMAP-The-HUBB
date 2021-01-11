@@ -5,6 +5,8 @@ import com.itextpdf.text.DocumentException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,6 +21,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -30,10 +33,10 @@ import socialnetwork.domain.FriendRequest;
 import socialnetwork.domain.Message;
 import socialnetwork.domain.Utilizator;
 import socialnetwork.service.ServiceDbNetwork;
+import socialnetwork.service.ServiceException;
 import socialnetwork.utils.events.UserChangeEvent;
 import socialnetwork.utils.observer.Observer;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -69,14 +72,16 @@ public class UserController implements Observer<UserChangeEvent> {
     @FXML
     TableColumn<Utilizator,String> firstname;
 
-    @FXML
+    /*@FXML
     TableView<FriendRequest> requests;
     @FXML
     TableColumn<FriendRequest, String> nameR;
     @FXML
     TableColumn<FriendRequest, String> statusR;
     @FXML
-    TableColumn<FriendRequest, LocalDateTime> dataR;
+    TableColumn<FriendRequest, LocalDateTime> dataR;*/
+    @FXML
+    ListView<FriendRequest> listRecvReq;
 
     @FXML
     Button addFBtn;
@@ -91,6 +96,9 @@ public class UserController implements Observer<UserChangeEvent> {
     Pagination pagFriends;
     @FXML
     Pagination pagReq;
+
+
+
 
 
     public void setService(ServiceDbNetwork serv, Utilizator user, Stage dialogStage){
@@ -109,7 +117,7 @@ public class UserController implements Observer<UserChangeEvent> {
         userList.setAll(users);
         toCombobox.setItems(userList);
         usetToList= new ArrayList<>();
-        lbl3.setText("HELLO "+ mainUser.toString()+" !");
+        lbl3.setText(mainUser.toString());
         ObservableList<Utilizator> friends = FXCollections.observableArrayList();
         friends.setAll(new ArrayList<>(serv.getUserFriends1(mainUser.getId())));
         comboF.setItems(friends);
@@ -121,6 +129,7 @@ public class UserController implements Observer<UserChangeEvent> {
         //init events
         initiateEvents();
         initiateMyEvents();
+        initEventLabels();
         myEvents.forEach(x->{
             //doar daca evenimentele nu s au terminat vor exista remindere
             if(x.getDate().isAfter(LocalDateTime.now())) {
@@ -131,8 +140,13 @@ public class UserController implements Observer<UserChangeEvent> {
             }
         });
 
+        //init bio
+        initiateBio();
+
 
     }
+
+
 
     private void initModel() {
         Iterable<Utilizator> users = serv.getAllUsers();
@@ -155,11 +169,23 @@ public class UserController implements Observer<UserChangeEvent> {
         List<FriendRequest> reqList = StreamSupport.stream(req.spliterator(),false).collect(Collectors.toList());
         modelRequests.setAll(reqList);
 
-        nameR.setCellValueFactory(c->new SimpleStringProperty(serv.getUser(c.getValue().getId().getLeft()).toString()));
+        /*nameR.setCellValueFactory(c->new SimpleStringProperty(serv.getUser(c.getValue().getId().getLeft()).toString()));
         //nameR.setCellValueFactory(new PropertyValueFactory<>("Id"));
         statusR.setCellValueFactory(new PropertyValueFactory<>("Status"));
         dataR.setCellValueFactory(new PropertyValueFactory<>("Data"));
-        requests.setItems(modelRequests);
+        requests.setItems(modelRequests);*/
+        listRecvReq.setItems(modelRequests);
+        listRecvReq.setCellFactory(param -> new ListCell<FriendRequest>(){
+            @Override
+            protected void updateItem(FriendRequest item, boolean empty) {
+                super.updateItem(item, empty);
+                if(empty || item == null || item.getId() == null)
+                    setText(null);
+                else
+                    setText("From: "+serv.getUser(item.getId().getLeft()).toString()+ "\n on: "+item.getData());
+            }
+        });
+
     }
 
 
@@ -191,11 +217,11 @@ public class UserController implements Observer<UserChangeEvent> {
     }
 
     public void handleRequest() {
-        if (requests.getSelectionModel().getSelectedItem()!=null){
+        if (listRecvReq.getSelectionModel().getSelectedItem()!=null){
             try {
 
                 FXMLLoader loader = new FXMLLoader();
-                FriendRequest friendRequest = requests.getSelectionModel().getSelectedItem();
+                FriendRequest friendRequest = listRecvReq.getSelectionModel().getSelectedItem();
                 loader.setLocation(getClass().getResource("/views/editRequests.fxml"));
                 AnchorPane root = loader.load();
 
@@ -228,6 +254,7 @@ public class UserController implements Observer<UserChangeEvent> {
         if(rmFriend!=null){
             try {
                 serv.removeFriend(user.getId(), rmFriend.getId());
+
                 MessageAlert.showMessage(null, Alert.AlertType.CONFIRMATION,"INFORMATION","Friend removed succesfully!!");
             }catch (Exception e){
                 e.printStackTrace();
@@ -242,11 +269,16 @@ public class UserController implements Observer<UserChangeEvent> {
         Utilizator userFrom = mainUser;
         Utilizator userTo = newFriend.getValue();
 
-        if(userTo != null){
-            serv.addRequest(userFrom.getId(),userTo.getId());
-            initModelSENTREQ();
-            MessageAlert.showMessage(null, Alert.AlertType.INFORMATION,"INFORMATION","Request was sent succesfully!");
-        }
+        if(userTo != null ){
+            try{
+                serv.addRequest(userFrom.getId(),userTo.getId());
+                initModelSENTREQ();
+                MessageAlert.showMessage(null, Alert.AlertType.INFORMATION,"INFORMATION","Request was sent succesfully!");
+
+            }catch (ServiceException e){
+                MessageAlert.showErrorMessage(null,e.getMessage());
+            }
+               }
         else{
             MessageAlert.showErrorMessage(null,"Select a new friend first!!");
         }
@@ -270,31 +302,32 @@ public class UserController implements Observer<UserChangeEvent> {
 
 
     public void handleLogOut() {
-        Stage dialogStage = new Stage();
-        AnchorPane root = new AnchorPane();
-        root.setPrefHeight(300);
-        root.setPrefWidth(400);
-        root.setStyle("-fx-background-color: #404041");
-        Label info = new Label(mainUser.toString()+"\n Are you sure you want to log out?");
-        info.setStyle("-fx-text-fill: white");
-        info.setPrefHeight(100);
 
-        Button btnYes = new Button("YES");
-        Button btnNo = new Button("NO");
-        btnYes.setOnAction(x->{mainStage.close();dialogStage.close();});
-        btnNo.setOnAction(x->dialogStage.close());
-        HBox hbox = new HBox(btnYes,new Label("     "),btnNo);
-        VBox box = new VBox(new Label(),info,hbox);
-        box.setAlignment(Pos.CENTER);
-        root.getChildren().addAll(box);
-        //Stage
+        Alert message=new Alert(Alert.AlertType.CONFIRMATION);
 
-        dialogStage.setTitle("Message");
-        dialogStage.initModality(Modality.WINDOW_MODAL);
-        Scene scene = new Scene(root);
-        dialogStage.setScene(scene);
+        message.getDialogPane().getStylesheets().add(MessageAlert.class.getResource("/css/style.css").toExternalForm());
 
-        dialogStage.show();
+        message.setHeaderText("LOG OUT");
+        message.setContentText("Are you sure you want to leave");
+        message.initOwner(null);
+        Optional<ButtonType> result =message.showAndWait();
+        if(!result.isPresent())
+        // alert is exited, no button has been pressed.
+        {
+
+
+        }
+        else
+            if(result.get() == ButtonType.OK)
+            {
+                mainStage.close();
+                message.close();
+
+            }
+            else if(result.get() == ButtonType.CANCEL){
+                message.close();
+            }
+        // cancel button is pressed
     }
 
     public void handlePages() {
@@ -503,16 +536,11 @@ public class UserController implements Observer<UserChangeEvent> {
     ObservableList<FriendRequest> reqList = FXCollections.observableArrayList();
 
 
-    @FXML
-    TableView<FriendRequest> requestsSENT;
-    @FXML
-    TableColumn<FriendRequest,String> to;
-    @FXML
-    TableColumn<FriendRequest,String> status;
-    @FXML
-    TableColumn<FriendRequest, LocalDateTime> dataR1;
+
     @FXML
     Label userLbl;
+    @FXML
+    ListView<FriendRequest> listReq;
 
 
     private void initModelSENTREQ() {
@@ -520,14 +548,26 @@ public class UserController implements Observer<UserChangeEvent> {
         List<FriendRequest> list = serv.sentRequests(mainUser.getId());
         System.out.println(list);
         reqList.setAll(list);
-        to.setCellValueFactory(c->new SimpleStringProperty(serv.getUser(c.getValue().getId().getRight()).toString()));
+       /* to.setCellValueFactory(c->new SimpleStringProperty(serv.getUser(c.getValue().getId().getRight()).toString()));
         status.setCellValueFactory(new PropertyValueFactory<>("Status"));
         dataR1.setCellValueFactory(new PropertyValueFactory<>("Data"));
-        requestsSENT.setItems(reqList);
+        requestsSENT.setItems(reqList);*/
+       listReq.setItems(reqList);
+        listReq.setCellFactory(param -> new ListCell<FriendRequest>(){
+            @Override
+            protected void updateItem(FriendRequest item, boolean empty) {
+                super.updateItem(item, empty);
+                if(empty || item == null || item.getId() == null)
+                    setText(null);
+                else
+                    setText("TO: "+serv.getUser(item.getId().getRight()).toString()+ "\n on: "+item.getData());
+            }
+        });
+
     }
 
     public void handleRmReq() {
-        FriendRequest removedRequest = requestsSENT.getSelectionModel().getSelectedItem();
+        FriendRequest removedRequest = listReq.getSelectionModel().getSelectedItem();
         if(removedRequest!=null){
             serv.removeRequest(removedRequest);
             initModelSENTREQ();
@@ -544,9 +584,9 @@ public class UserController implements Observer<UserChangeEvent> {
     @FXML
     DatePicker evDate;
     @FXML
-    Spinner<Integer> evHour;
+    Slider evHour;
     @FXML
-    Spinner<Integer> evMin;
+    Slider evMin;
 
     @FXML
     ComboBox<Event> eventCombo;
@@ -586,10 +626,41 @@ public class UserController implements Observer<UserChangeEvent> {
 
 
     }
+    @FXML
+    Label lHour;
+    @FXML
+    Label lMin;
+
+    public void initEventLabels() {
+
+        evHour.valueProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(
+                    ObservableValue<? extends Number> observableValue,
+                    Number oldValue,
+                    Number newValue) {
+                lHour.textProperty().setValue(
+                        String.valueOf(newValue.intValue()));
+            }
+        });
+        evMin.valueProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(
+                    ObservableValue<? extends Number> observableValue,
+                    Number oldValue,
+                    Number newValue) {
+                lMin.textProperty().setValue(
+                        String.valueOf(newValue.intValue()));
+            }
+        });
+
+    }
 
     public void handleCreateEvent() {
         String name = evName.getText();
-        LocalDateTime data = LocalDateTime.of(evDate.getValue(), LocalTime.of(evHour.getValue(),evMin.getValue()));
+        LocalDateTime data = LocalDateTime.of(evDate.getValue(), LocalTime.of((int)evHour.getValue(),(int)evMin.getValue()));
 
         Event newEvent = new Event(name,data);
         newEvent.addParticipant(mainUser.getId());
@@ -643,7 +714,7 @@ public class UserController implements Observer<UserChangeEvent> {
         }
     }
 
-    public void handleUnsubscribeEvent(ActionEvent actionEvent) {
+    public void handleUnsubscribeEvent() {
         Event eventToUnsubscribe = tableEvents.getSelectionModel().getSelectedItem();
         if(eventToUnsubscribe != null){
             try{
@@ -669,6 +740,113 @@ public class UserController implements Observer<UserChangeEvent> {
         }
     }
 
+    //------------BIO------------------
+    private void initiateBio() {
+        school.setWrapText(true);
+        school.setText(mainUser.getSchool());
+        about.setText(mainUser.getAbout());
+        gender.setText(mainUser.getSex());
+        living.setText(mainUser.getLiving());
+        Textfrom.setText(mainUser.getFrom());
+        hobby.setText(mainUser.getHobby());
+    }
+
+    @FXML
+    TextArea school;
+    @FXML
+    Label lSchool;
+
+    public void handleEditSchool() {
+        if(school.isDisabled()){
+            school.setDisable(false);
+            lSchool.setText("save");
+        }
+        else {
+            school.setDisable(true);
+            lSchool.setText("edit");
+        }
+
+    }
+
+    @FXML
+    TextField living;
+    @FXML
+    Label lLiv;
+    public void handleEditLiv() {
+        if(living.isDisabled()){
+            living.setDisable(false);
+            lLiv.setText("save");
+        }
+        else {
+            living.setDisable(true);
+            lLiv.setText("edit");
+        }
+    }@FXML
+    TextArea about;
+    @FXML
+    Label lAbout;
+
+    public void handleEditBio() {
+        if(about.isDisabled()){
+            about.setDisable(false);
+            lAbout.setText("save");
+        }
+        else {
+            about.setDisable(true);
+            lAbout.setText("edit");
+        }
+    }
+
+    @FXML
+    TextField Textfrom;
+    @FXML
+    Label lFrom;
+
+    public void handleEditFrom() {
+        if(Textfrom.isDisabled()){
+            Textfrom.setDisable(false);
+            lFrom.setText("save");
+        }
+        else {
+            Textfrom.setDisable(true);
+            lFrom.setText("edit");
+        }
+    }
+
+    @FXML
+    TextField gender;
+    @FXML
+    TextField hobby;
+    @FXML
+    Label lGender;
+    @FXML
+    Label lhobby;
+
+    public void handleEditGender() {
+        if(gender.isDisabled()){
+            gender.setDisable(false);
+            lGender.setText("save");
+        }
+        else {
+            gender.setDisable(true);
+            lGender.setText("edit");
+        }
+    }
+
+    public void handleEditHobby() {
+        if(hobby.isDisabled()){
+            hobby.setDisable(false);
+            lhobby.setText("save");
+        }
+        else {
+            hobby.setDisable(true);
+            lhobby.setText("edit");
+        }
+    }
+
+
+
+
 
 }
 
@@ -686,14 +864,12 @@ class EventReminder extends TimerTask{
     @Override
     public void run() {
 
-        Platform.runLater(new Runnable() {
-            public void run() {
+        Platform.runLater(() -> {
 
-                notifSound.play();
+            notifSound.play();
 
-                MessageAlert.showMessage(null, Alert.AlertType.INFORMATION,"REMINDER","You have an hour until event: " + event);
+            MessageAlert.showMessage(null, Alert.AlertType.INFORMATION,"REMINDER","You have an hour until event: " + event);
 
-            }
         });
          }
 }

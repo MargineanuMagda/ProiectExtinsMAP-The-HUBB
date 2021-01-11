@@ -1,0 +1,45 @@
+.label{
+    -fx-background-image: url(../images/fr2.png);
+    -fx-background-size: 320px 80px;
+    -fx-pref-height: 80;
+    -fx-pref-width: 320;
+    -fx-font-size: 17px;
+    -fx-font-family: Candara ;
+    -fx-alignment: center;
+//-fx-background-color: #3285a8;
+    -fx-font-weight:bold;
+    -fx-text-fill: wheat;
+
+}
+.list-cell:selected{
+    -fx-cell-size: 33;
+    -fx-background-image: url(../images/friends.png);
+    -fx-background-size: 320px 80px;
+    -fx-pref-height: 80;
+    -fx-pref-width: 320;
+    -fx-font-size: 14px;
+    -fx-font-family: Candara ;
+    -fx-alignment: center;
+//-fx-background-color: #3285a8;
+    -fx-font-weight:bold;
+    -fx-text-fill: wheat;
+}
+.list-view{
+    -fx-background-color: transparent;
+}
+.list-cell:empty {
+    -fx-opacity: 0;
+}
+.list-cell{
+    -fx-cell-size: 33;
+    -fx-background-image: url(../images/fr1.png);
+    -fx-background-size: 320px 80px;
+    -fx-pref-height: 80;
+    -fx-pref-width: 320;
+    -fx-font-size: 14px;
+    -fx-font-family: Candara ;
+    -fx-alignment: center;
+//-fx-background-color: #3285a8;
+    -fx-font-weight:bold;
+    -fx-text-fill: #07193d;
+}

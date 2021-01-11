@@ -13,12 +13,14 @@ import socialnetwork.domain.LogIn;
 import socialnetwork.domain.Tuple;
 import socialnetwork.domain.Utilizator;
 import socialnetwork.service.ServiceDbNetwork;
+import socialnetwork.utils.Utils;
 
 import java.awt.*;
 
 public class LogController {
     ServiceDbNetwork serv;
     Stage mainStage;
+
 
    @FXML
    TextField uNume;
@@ -34,7 +36,7 @@ public class LogController {
         try {
 
             String username = uNume.getText();
-            String passowrd = passwd.getText();
+            String passowrd = Utils.hash(passwd.getText());
 
             LogIn log = serv.findLog(new Tuple<>(username,passowrd));
 
