@@ -9,9 +9,10 @@
     <VBox alignment="CENTER" prefHeight="400" prefWidth="700">
         <Label text=" We're glad you chose us."/>
         <Label prefHeight="80" />
-        <Label prefHeight="30" style="-fx-font-size: 25" text="WELCOME TO" />
+        <Label prefHeight="30" style="-fx-font-size: 30" text="WELCOME TO" />
         <HBox>
-            <Label prefHeight="50" style="-fx-font-size: 33" text="               THE H" />
+            <Label prefWidth="300"/>
+            <Label prefHeight="50" style="-fx-font-size: 38" text="THE H" />
             <Label prefHeight="50" prefWidth="39.0" style="-fx-text-fill: #5396bd" text="UBB" />
         </HBox>
 
@@ -27,13 +28,13 @@
             <Label prefWidth="40"/>
             <VBox  prefWidth="203.0">
                 <Label />
-                <Label text="USERNAME" style="-fx-font-style: 16;-fx-font-style: italic"/>
+                <Label text="USERNAME" style="-fx-font-size:  17;-fx-font-style: italic"/>
                 <TextField fx:id="uName" />
                 <Label />
-                <Label text="FIRSTNAME" style="-fx-font-style: 16;-fx-font-style: italic"/>
+                <Label text="FIRSTNAME" style="-fx-font-size:  17;-fx-font-style: italic"/>
                 <TextField fx:id="fName" />
                 <Label />
-                <Label text="LASTNAME" style="-fx-font-style: 16;-fx-font-style: italic"/>
+                <Label text="LASTNAME" style="-fx-font-size:  17;-fx-font-style: italic"/>
                 <TextField fx:id="lName" />
                 <Label />
 
@@ -41,9 +42,9 @@
             <Label prefWidth="40"/>
             <VBox>
                 <Label />
-                <Label text="PASSWORD" style="-fx-font-style: 16;-fx-font-style: italic" />
+                <Label text="PASSWORD" style="-fx-font-size:  17;-fx-font-style: italic" />
                 <PasswordField fx:id="pass" />
-                <Label text="PASSWORD CONFIRMATION" style="-fx-font-style: 16;-fx-font-style: italic"/>
+                <Label text="PASSWORD CONFIRMATION" style="-fx-font-size: 16;-fx-font-style: italic"/>
                 <PasswordField fx:id="passwC"/>
                 <Label />
                 <Button fx:id="btn" onAction="#hanndleAddUser" text="ADD NEW USER" />

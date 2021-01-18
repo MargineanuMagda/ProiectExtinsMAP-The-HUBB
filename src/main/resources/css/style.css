@@ -27,11 +27,17 @@
     -fx-background-color:gray ;
 
 }
+.table-row-cell:filled:selected:default.text{
+    -fx-text-fill: wheat;
+}
 .table-row-cell:selected .text {
      -fx-fill: #ffffff;
 
 
  }
+.table-row-cell:default.text{
+    -fx-text-fill: wheat;
+}
 
 .table-row-cell{
     -fx-font-weight:bold;
@@ -113,7 +119,7 @@
 .pagination > .pagination-control > .control-box > .number-button:selected,
 .pagination > .pagination-control > .control-box > .bullet-button:selected{
     -fx-background-insets: 0;
-    -fx-background-color: #06181f;
+    -fx-background-color: #07193d;
     -fx-text-fill: wheat;
 }
 .pagination > .pagination-control > .control-box {
@@ -126,7 +132,7 @@
 .pagination > .pagination-control > .control-box > .left-arrow-button,
 .pagination > .pagination-control > .control-box > .right-arrow-button {
     -fx-background-insets: 0, 1;
-    -fx-background-color: #073b45;
+    -fx-background-color: #004d94;
     -fx-text-fill: white;
     -fx-min-width: 25;
     -fx-min-height: 25;

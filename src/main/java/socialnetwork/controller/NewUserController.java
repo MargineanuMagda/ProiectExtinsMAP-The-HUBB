@@ -14,6 +14,7 @@ import socialnetwork.service.ServiceException;
 import socialnetwork.utils.Utils;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class NewUserController {
     ServiceDbNetwork serv;
@@ -48,6 +49,7 @@ public class NewUserController {
 
                 Long id1 = serv.findLogID(username,passwd);
                 Utilizator u = new Utilizator(firstname,lastname);
+                u.setBio(Arrays.asList(" "," "," "," "," "," "));
                 u.setId(id1);
                 serv.addUtilizator(u);
                 MessageAlert.showMessage(null, Alert.AlertType.INFORMATION,"INFORMATION","User added succesfully!");

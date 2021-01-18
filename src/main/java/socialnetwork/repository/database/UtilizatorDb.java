@@ -46,7 +46,8 @@ public class UtilizatorDb extends AbstractDbRepository<Long, Utilizator> {
     @Override
     protected PreparedStatement addQuery(Utilizator entity, Connection connection) throws SQLException {
 
-            return connection.prepareStatement("INSERT INTO users VALUES ("+entity.getId().toString() +",'"+entity.getFirstName()+"','"+entity.getLastName()+"')");
+        String bio = entity.getSchool()+";"+entity.getLiving()+";"+entity.getFrom()+";"+entity.getHobby()+";"+entity.getSex()+";"+entity.getAbout();
+            return connection.prepareStatement("INSERT INTO users VALUES ("+entity.getId().toString() +",'"+entity.getFirstName()+"','"+entity.getLastName()+"', '"+bio+"')");
 
 
     }
@@ -58,7 +59,7 @@ public class UtilizatorDb extends AbstractDbRepository<Long, Utilizator> {
 
     @Override
     protected PreparedStatement updateQuery(Utilizator entity, Connection connection) throws SQLException {
-        return connection.prepareStatement("UPDATE  users SET firstname = '"+entity.getFirstName()+"',lastname = '" + entity.getLastName()+"' WHERE idU = "+entity.getId());
+        return connection.prepareStatement("UPDATE  users SET firstname = '"+entity.getFirstName()+"',lastname = '" + entity.getLastName()+"' ,bio = '" + entity.getBio()+"' WHERE idU = "+entity.getId());
     }
 
 

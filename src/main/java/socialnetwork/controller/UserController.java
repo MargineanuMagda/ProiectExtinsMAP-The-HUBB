@@ -5,8 +5,6 @@ import com.itextpdf.text.DocumentException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -54,7 +52,7 @@ public class UserController implements Observer<UserChangeEvent> {
     ObservableList<Utilizator> modelUsers = FXCollections.observableArrayList();
     ObservableList<Utilizator> modelFriends = FXCollections.observableArrayList();
     ObservableList<FriendRequest> modelRequests = FXCollections.observableArrayList();
-    ObservableList<Utilizator> modelNotFriends=FXCollections.observableArrayList();
+    ObservableList<Utilizator> modelNotFriends = FXCollections.observableArrayList();
 
     Stage mainStage;
     Utilizator mainUser;
@@ -70,16 +68,8 @@ public class UserController implements Observer<UserChangeEvent> {
     @FXML
     TableColumn<Utilizator, String> lastname;
     @FXML
-    TableColumn<Utilizator,String> firstname;
+    TableColumn<Utilizator, String> firstname;
 
-    /*@FXML
-    TableView<FriendRequest> requests;
-    @FXML
-    TableColumn<FriendRequest, String> nameR;
-    @FXML
-    TableColumn<FriendRequest, String> statusR;
-    @FXML
-    TableColumn<FriendRequest, LocalDateTime> dataR;*/
     @FXML
     ListView<FriendRequest> listRecvReq;
 
@@ -98,25 +88,22 @@ public class UserController implements Observer<UserChangeEvent> {
     Pagination pagReq;
 
 
-
-
-
-    public void setService(ServiceDbNetwork serv, Utilizator user, Stage dialogStage){
+    public void setService(ServiceDbNetwork serv, Utilizator user, Stage dialogStage) {
 
         this.serv = serv;
-        mainUser=user;
-        mainStage=dialogStage;
+        mainUser = user;
+        mainStage = dialogStage;
         serv.addObserver(this);
         initModel();
         initiate();
         initiateFriends(0);
         initiateRequests(0);
-        lbl.setText(mainUser.toString()+" !");
+        lbl.setText(mainUser.toString() + " !");
         List<Utilizator> users = new ArrayList<>();
         serv.getAllUsers().forEach(users::add);
         userList.setAll(users);
         toCombobox.setItems(userList);
-        usetToList= new ArrayList<>();
+        usetToList = new ArrayList<>();
         lbl3.setText(mainUser.toString());
         ObservableList<Utilizator> friends = FXCollections.observableArrayList();
         friends.setAll(new ArrayList<>(serv.getUserFriends1(mainUser.getId())));
@@ -124,15 +111,15 @@ public class UserController implements Observer<UserChangeEvent> {
 
         //init sent requests
         userLbl.setText(mainUser.toString());
-        initModelSENTREQ();
+        initModelSENTREQ(0);
 
         //init events
         initiateEvents();
-        initiateMyEvents();
+        initiateMyEvents(0);
         initEventLabels();
-        myEvents.forEach(x->{
+        myEvents.forEach(x -> {
             //doar daca evenimentele nu s au terminat vor exista remindere
-            if(x.getDate().isAfter(LocalDateTime.now())) {
+            if (x.getDate().isAfter(LocalDateTime.now())) {
                 EventReminder reminder = new EventReminder(x);
                 Timer t = new Timer(true);
                 t.schedule(reminder, new GregorianCalendar(x.getData().getYear(), x.getData().getMonthValue() - 1, x.getData().getDayOfMonth(), x.getTime().getHour() - 1, x.getTime().getMinute()).getTime());
@@ -147,16 +134,15 @@ public class UserController implements Observer<UserChangeEvent> {
     }
 
 
-
     private void initModel() {
         Iterable<Utilizator> users = serv.getAllUsers();
-        List<Utilizator> usersList = StreamSupport.stream(users.spliterator(),false).collect(Collectors.toList());
+        List<Utilizator> usersList = StreamSupport.stream(users.spliterator(), false).collect(Collectors.toList());
         modelUsers.setAll(usersList);
 
     }
 
     private void initiate() {
-       lbl.setText(mainUser.toString());
+        lbl.setText(mainUser.toString());
 
         //logIn.setOnAction(event);
     }
@@ -164,31 +150,25 @@ public class UserController implements Observer<UserChangeEvent> {
 
     private void initiateRequests(int currentPage) {
         Utilizator user = mainUser;
-        pagReq.setPageCount(serv.userRequest(user.getId()).size()/nrOnPages.getValue()+1);
-        Iterable<FriendRequest> req = serv.getNextRequestOnPage(currentPage,user.getId());
-        List<FriendRequest> reqList = StreamSupport.stream(req.spliterator(),false).collect(Collectors.toList());
+        pagReq.setPageCount(serv.userRequest(user.getId()).size() / nrOnPages.getValue() + 1);
+        Iterable<FriendRequest> req = serv.getNextRequestOnPage(currentPage, user.getId());
+        List<FriendRequest> reqList = StreamSupport.stream(req.spliterator(), false).collect(Collectors.toList());
         modelRequests.setAll(reqList);
 
-        /*nameR.setCellValueFactory(c->new SimpleStringProperty(serv.getUser(c.getValue().getId().getLeft()).toString()));
-        //nameR.setCellValueFactory(new PropertyValueFactory<>("Id"));
-        statusR.setCellValueFactory(new PropertyValueFactory<>("Status"));
-        dataR.setCellValueFactory(new PropertyValueFactory<>("Data"));
-        requests.setItems(modelRequests);*/
+
         listRecvReq.setItems(modelRequests);
-        listRecvReq.setCellFactory(param -> new ListCell<FriendRequest>(){
+        listRecvReq.setCellFactory(param -> new ListCell<FriendRequest>() {
             @Override
             protected void updateItem(FriendRequest item, boolean empty) {
                 super.updateItem(item, empty);
-                if(empty || item == null || item.getId() == null)
+                if (empty || item == null || item.getId() == null)
                     setText(null);
                 else
-                    setText("From: "+serv.getUser(item.getId().getLeft()).toString()+ "\n on: "+item.getData());
+                    setText("From: " + serv.getUser(item.getId().getLeft()).toString() + "\n on: " + item.getData());
             }
         });
 
     }
-
-
 
 
     private void initiateFriends(int currentPage) {
@@ -196,18 +176,18 @@ public class UserController implements Observer<UserChangeEvent> {
         int pag = nrOnPages.getValue();
         serv.setPageSize(pag);
 
-        Iterable<Utilizator> users = serv.getNextFriendOnPage(currentPage,user.getId());
+        Iterable<Utilizator> users = serv.getNextFriendOnPage(currentPage, user.getId());
 
-        List<Utilizator> usersList = StreamSupport.stream(users.spliterator(),false).collect(Collectors.toList());
-        pagFriends.setPageCount(serv.getUserFriends1(user.getId()).size()/pag+1);
+        List<Utilizator> usersList = StreamSupport.stream(users.spliterator(), false).collect(Collectors.toList());
+        pagFriends.setPageCount(serv.getUserFriends1(user.getId()).size() / pag + 1);
         modelFriends.setAll(usersList);
         firstname.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         lastname.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         friends.setItems(modelFriends);
 
-        List<Utilizator> userList1= StreamSupport.stream(serv.getAllUsers().spliterator(),false).collect(Collectors.toList());
-        List<Utilizator> notFriends=userList1.stream()
-                .filter(x-> !x.getId().equals(user.getId()) && !serv.findFriendship(x.getId(), user.getId()))
+        List<Utilizator> userList1 = StreamSupport.stream(serv.getAllUsers().spliterator(), false).collect(Collectors.toList());
+        List<Utilizator> notFriends = userList1.stream()
+                .filter(x -> !x.getId().equals(user.getId()) && !serv.findFriendship(x.getId(), user.getId()))
                 .collect(Collectors.toList());
         //System.out.println(notFriends);
         modelNotFriends.setAll(notFriends);
@@ -217,7 +197,7 @@ public class UserController implements Observer<UserChangeEvent> {
     }
 
     public void handleRequest() {
-        if (listRecvReq.getSelectionModel().getSelectedItem()!=null){
+        if (listRecvReq.getSelectionModel().getSelectedItem() != null) {
             try {
 
                 FXMLLoader loader = new FXMLLoader();
@@ -233,35 +213,31 @@ public class UserController implements Observer<UserChangeEvent> {
                 dialogStage.setScene(scene);
 
                 RequestController reqCtrl = loader.getController();
-                reqCtrl.setService(serv,dialogStage,friendRequest);
+                reqCtrl.setService(serv, dialogStage, friendRequest);
                 dialogStage.show();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else
-            MessageAlert.showErrorMessage(null,"Select the request you want to edit first!!");
+        } else
+            MessageAlert.showErrorMessage(null, "Select the request you want to edit first!!");
 
 
     }
 
 
-
-
-
     public void handleRmFriend() {
-        Utilizator rmFriend =friends.getSelectionModel().getSelectedItem();
+        Utilizator rmFriend = friends.getSelectionModel().getSelectedItem();
         Utilizator user = mainUser;
-        if(rmFriend!=null){
+        if (rmFriend != null) {
             try {
                 serv.removeFriend(user.getId(), rmFriend.getId());
 
-                MessageAlert.showMessage(null, Alert.AlertType.CONFIRMATION,"INFORMATION","Friend removed succesfully!!");
-            }catch (Exception e){
+                MessageAlert.showMessage(null, Alert.AlertType.CONFIRMATION, "INFORMATION", "Friend removed succesfully!!");
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else
-            MessageAlert.showErrorMessage(null,"Select the friend you want to remove first!!");
+        } else
+            MessageAlert.showErrorMessage(null, "Select the friend you want to remove first!!");
         //else print a error message box
     }
 
@@ -269,64 +245,55 @@ public class UserController implements Observer<UserChangeEvent> {
         Utilizator userFrom = mainUser;
         Utilizator userTo = newFriend.getValue();
 
-        if(userTo != null ){
-            try{
-                serv.addRequest(userFrom.getId(),userTo.getId());
-                initModelSENTREQ();
-                MessageAlert.showMessage(null, Alert.AlertType.INFORMATION,"INFORMATION","Request was sent succesfully!");
+        if (userTo != null) {
+            try {
+                serv.addRequest(userFrom.getId(), userTo.getId());
+                initModelSENTREQ(0);
+                MessageAlert.showMessage(null, Alert.AlertType.INFORMATION, "INFORMATION", "Request was sent succesfully!");
 
-            }catch (ServiceException e){
-                MessageAlert.showErrorMessage(null,e.getMessage());
+            } catch (ServiceException e) {
+                MessageAlert.showErrorMessage(null, e.getMessage());
             }
-               }
-        else{
-            MessageAlert.showErrorMessage(null,"Select a new friend first!!");
+        } else {
+            MessageAlert.showErrorMessage(null, "Select a new friend first!!");
         }
         //else print a error message box
     }
 
 
-
     @Override
     public void update(UserChangeEvent userChangeEvent) {
         //initiate();
-       // initModel();
+        // initModel();
         initiateFriends(0);
         initiateRequests(0);
-        initiateMyEvents();
+        initiateMyEvents(0);
         initiateEvents();
     }
 
 
-
-
-
     public void handleLogOut() {
 
-        Alert message=new Alert(Alert.AlertType.CONFIRMATION);
+        Alert message = new Alert(Alert.AlertType.CONFIRMATION);
 
         message.getDialogPane().getStylesheets().add(MessageAlert.class.getResource("/css/style.css").toExternalForm());
 
         message.setHeaderText("LOG OUT");
         message.setContentText("Are you sure you want to leave");
         message.initOwner(null);
-        Optional<ButtonType> result =message.showAndWait();
-        if(!result.isPresent())
+        Optional<ButtonType> result = message.showAndWait();
+        if (!result.isPresent())
         // alert is exited, no button has been pressed.
         {
 
 
-        }
-        else
-            if(result.get() == ButtonType.OK)
-            {
-                mainStage.close();
-                message.close();
+        } else if (result.get() == ButtonType.OK) {
+            mainStage.close();
+            message.close();
 
-            }
-            else if(result.get() == ButtonType.CANCEL){
-                message.close();
-            }
+        } else if (result.get() == ButtonType.CANCEL) {
+            message.close();
+        }
         // cancel button is pressed
     }
 
@@ -336,7 +303,10 @@ public class UserController implements Observer<UserChangeEvent> {
         serv.setPageSize(number);
         initiateFriends(0);
         initiateRequests(0);
+        initModelSENTREQ(0);
+
     }
+
 
     public void handleChangePage() {
         System.out.println("AM SCHIMBAT PAGINA");
@@ -351,7 +321,6 @@ public class UserController implements Observer<UserChangeEvent> {
     }
 
 
-
     //messages tab
     Stage dialogStage;
     ObservableList<Message> msgList = FXCollections.observableArrayList();
@@ -361,11 +330,11 @@ public class UserController implements Observer<UserChangeEvent> {
     @FXML
     TableView<Message> table;
     @FXML
-    TableColumn<Message,String> from;
+    TableColumn<Message, String> from;
     @FXML
     TableColumn<Message, LocalDateTime> date;
     @FXML
-    TableColumn<Message,String>subj;
+    TableColumn<Message, String> subj;
     @FXML
     TextField toField;
     @FXML
@@ -374,34 +343,35 @@ public class UserController implements Observer<UserChangeEvent> {
     ComboBox<Utilizator> toCombobox;
 
 
-
-
-
-
     public void handleSent() {
         List<Message> msgs = serv.inboxUserSENT(mainUser.getId());
         msgList.setAll(msgs);
         from.setText("TO");
         //from.setCellValueFactory(c->new SimpleStringProperty(serv.getUser(c.getValue().getUserTo().get(0)).toString()));
-        from.setCellValueFactory(c->new SimpleStringProperty(c.getValue().getUserTo().stream().map(x->serv.getUser(x).toString()).reduce("",(x,y)->x+"\n"+y)));
+        from.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getUserTo().stream().map(x -> serv.getUser(x).toString()).reduce("", (x, y) -> x + "\n" + y)));
 
         date.setCellValueFactory(new PropertyValueFactory<>("Date"));
+        date.setSortType(TableColumn.SortType.DESCENDING);
         subj.setCellValueFactory(new PropertyValueFactory<>("Mesaj"));
         table.setItems(msgList);
+
+        table.getSortOrder().add(date);
     }
 
     public void handleReceived() {
         List<Message> msgs = serv.inboxUser1(mainUser.getId());
         msgList.setAll(msgs);
         from.setText("FROM");
-        from.setCellValueFactory(c->new SimpleStringProperty(serv.getUser(c.getValue().getUserFrom()).toString()+";"+c.getValue().getUserTo().stream()
-                .filter(x-> (!x.equals(mainUser.getId())))
-                .map(x->serv.getUser(x).toString())
-                .reduce("",(x,y)->x+";"+y)));
+        from.setCellValueFactory(c -> new SimpleStringProperty(serv.getUser(c.getValue().getUserFrom()).toString() + ";" + c.getValue().getUserTo().stream()
+                .filter(x -> (!x.equals(mainUser.getId())))
+                .map(x -> serv.getUser(x).toString())
+                .reduce("", (x, y) -> x + ";" + y)));
 
+        date.setSortType(TableColumn.SortType.DESCENDING);
         date.setCellValueFactory(new PropertyValueFactory<>("Date"));
         subj.setCellValueFactory(new PropertyValueFactory<>("Mesaj"));
         table.setItems(msgList);
+        table.getSortOrder().add(date);
     }
 
     public void handleNewMsg() {
@@ -413,15 +383,15 @@ public class UserController implements Observer<UserChangeEvent> {
                 MessageAlert.showErrorMessage(null, "This user does not exist!!");
             else {
                 Long reply = 0L;
-                if(table.getSelectionModel().getSelectedItem()!= null)
+                if (table.getSelectionModel().getSelectedItem() != null)
                     reply = table.getSelectionModel().getSelectedItem().getId();
                 Message m = new Message(mainUser.getId(), usetToList, reply, text.getText());
                 m.setId(0L);
                 serv.sentNewMessage(m);
-                MessageAlert.showMessage(null, Alert.AlertType.INFORMATION,"INFORMATION","message was sent succesfully!");
+                MessageAlert.showMessage(null, Alert.AlertType.INFORMATION, "INFORMATION", "message was sent succesfully!");
             }
-        }catch (Exception e){
-            MessageAlert.showErrorMessage(null,e.getMessage());
+        } catch (Exception e) {
+            MessageAlert.showErrorMessage(null, e.getMessage());
         }
 
 
@@ -429,24 +399,40 @@ public class UserController implements Observer<UserChangeEvent> {
 
     public void handleShowConv() {
         Message msg = table.getSelectionModel().getSelectedItem();
-        if(msg!=null){
+        if (msg != null) {
 
 
             AnchorPane root = new AnchorPane();
             root.setPrefHeight(300);
             root.setPrefWidth(400);
             root.setStyle("-fx-background-color: #404041");
-            Label from = new Label("FROM:\t"+ serv.getUser(msg.getUserFrom()));
-            from.setStyle("-fx-text-fill: white");
+            root.getStylesheets().add(MessageAlert.class.getResource("/css/style.css").toExternalForm());
+            Label from = new Label("FROM:\t" + serv.getUser(msg.getUserFrom()));
+            from.getStylesheets().add(MessageAlert.class.getResource("/css/label.css").toExternalForm());
+            //from.setStyle("-fx-text-fill: white");
 
-            Label to = new Label("TO:\t"+ msg.getUserTo().stream().map(x->serv.getUser(x)).reduce("",(x,y)->x+";"+y));
+            Label to = new Label("TO:\t");
+            VBox lList = new VBox();
+            lList.setFillWidth(true);
+            lList.setAlignment(Pos.CENTER);
+            msg.getUserTo().stream().map(x -> serv.getUser(x)).forEach(x -> {
+                Label label = new Label(x.toString());
+                label.getStylesheets().add(MessageAlert.class.getResource("/css/label1.css").toExternalForm());
+                lList.getChildren().add(label);
+            });
             to.setStyle("-fx-text-fill: white");
             TextArea txt = new TextArea(msg.getMesaj());
             txt.setEditable(false);
-            Label l= new Label();
-            Button btn = new Button("REPLY");
+            txt.setPrefHeight(150);
+            Label l = new Label();
+
+            Button btn = new Button("REPLY TO ALL");
             btn.setOnAction(this::handleReply);
-            VBox box = new VBox(new Label(),from,to,txt,l,btn);
+            Button btReply = new Button("REPLY TO ONE");
+            btReply.setOnAction(this::handleReplyToOne);
+            HBox hBox = new HBox(btReply, new Label("           "), btn);
+
+            VBox box = new VBox(new Label(), from, to, lList, txt, l, hBox);
             box.setAlignment(Pos.CENTER);
             root.getChildren().addAll(box);
             //Stage
@@ -458,8 +444,19 @@ public class UserController implements Observer<UserChangeEvent> {
 
             dialogStage.show();
 
-        }else
-            MessageAlert.showErrorMessage(null,"Please select a message first!");
+        } else
+            MessageAlert.showErrorMessage(null, "Please select a message first!");
+
+    }
+
+    private void handleReplyToOne(ActionEvent actionEvent) {
+
+        toCombobox.setValue((Utilizator) serv.getUser(table.getSelectionModel().getSelectedItem().getUserFrom()));
+        usetToList.clear();
+        usetToList.add(table.getSelectionModel().getSelectedItem().getUserFrom());
+        //table.getSelectionModel().getSelectedItem().getUserTo().stream().filter(x-> !x.equals(mainUser.getId())).forEach(x->usetToList.add(x));
+        toField.setText(serv.getUser(table.getSelectionModel().getSelectedItem().getUserFrom()).toString());
+        dialogStage.close();
 
     }
 
@@ -467,7 +464,7 @@ public class UserController implements Observer<UserChangeEvent> {
         toCombobox.setValue((Utilizator) serv.getUser(table.getSelectionModel().getSelectedItem().getUserFrom()));
         usetToList.clear();
         usetToList.add(table.getSelectionModel().getSelectedItem().getUserFrom());
-        table.getSelectionModel().getSelectedItem().getUserTo().stream().filter(x-> !x.equals(mainUser.getId())).forEach(x->usetToList.add(x));
+        table.getSelectionModel().getSelectedItem().getUserTo().stream().filter(x -> !x.equals(mainUser.getId())).forEach(x -> usetToList.add(x));
         toField.setText(serv.getUser(table.getSelectionModel().getSelectedItem().getUserFrom()).toString());
         dialogStage.close();
     }
@@ -475,7 +472,7 @@ public class UserController implements Observer<UserChangeEvent> {
     public void handleNewUserTo() {
         usetToList.add(toCombobox.getValue().getId());
         String s = toField.getText();
-        toField.setText(s+"   "+toCombobox.getValue());
+        toField.setText(s + "   " + toCombobox.getValue());
     }
 
     public void handleRemove() {
@@ -504,31 +501,28 @@ public class UserController implements Observer<UserChangeEvent> {
     ComboBox<Utilizator> comboF;
 
 
-
     public void handleGenerateRap1() {
-        if ( date1.getValue()!= null && date2.getValue() != null && date1.getValue().isBefore(date2.getValue()) && filename1.getText()!= null)
-        {
+        if (date1.getValue() != null && date2.getValue() != null && date1.getValue().isBefore(date2.getValue()) && filename1.getText() != null) {
             try {
-                serv.raport1(mainUser,date1.getValue(),date2.getValue(),filename1.getText());
-                MessageAlert.showMessage(null, Alert.AlertType.INFORMATION,"INFO","Raport generated succesfully!");
+                serv.raport1(mainUser, date1.getValue(), date2.getValue(), filename1.getText());
+                MessageAlert.showMessage(null, Alert.AlertType.INFORMATION, "INFO", "Raport generated succesfully!");
             } catch (FileNotFoundException | DocumentException e) {
                 e.printStackTrace();
             }
-        }else
-            MessageAlert.showErrorMessage(null,"Pick the dates in order please!");
+        } else
+            MessageAlert.showErrorMessage(null, "Pick the dates in order please!");
     }
 
     public void handleGenerateRap2() {
-        if ( date3.getValue()!= null && date4.getValue() != null && date3.getValue().isBefore(date4.getValue()) && filename2.getText()!= null && comboF.getValue()!=null)
-        {
+        if (date3.getValue() != null && date4.getValue() != null && date3.getValue().isBefore(date4.getValue()) && filename2.getText() != null && comboF.getValue() != null) {
             try {
-                serv.raport2(mainUser,comboF.getValue(),date3.getValue(),date4.getValue(),filename2.getText());
-                MessageAlert.showMessage(null, Alert.AlertType.INFORMATION,"INFO","Raport generated succesfully!");
+                serv.raport2(mainUser, comboF.getValue(), date3.getValue(), date4.getValue(), filename2.getText());
+                MessageAlert.showMessage(null, Alert.AlertType.INFORMATION, "INFO", "Raport generated succesfully!");
             } catch (FileNotFoundException | DocumentException e) {
                 e.printStackTrace();
             }
-        }else
-            MessageAlert.showErrorMessage(null,"Pick the dates in order please!");
+        } else
+            MessageAlert.showErrorMessage(null, "Pick the dates in order please!");
     }
 
     //sent requests controller
@@ -536,31 +530,38 @@ public class UserController implements Observer<UserChangeEvent> {
     ObservableList<FriendRequest> reqList = FXCollections.observableArrayList();
 
 
-
     @FXML
     Label userLbl;
     @FXML
     ListView<FriendRequest> listReq;
+    @FXML
+    Pagination pagSENTReq;
 
+    public void handleChangePage2() {
 
-    private void initModelSENTREQ() {
+        int paginaCurenta = pagReq.getCurrentPageIndex();
+        initModelSENTREQ(paginaCurenta);
+    }
 
-        List<FriendRequest> list = serv.sentRequests(mainUser.getId());
-        System.out.println(list);
+    private void initModelSENTREQ(int page) {
+
+        pagSENTReq.setPageCount(serv.sentRequests(mainUser.getId()).size() / nrOnPages.getValue() + 1);
+        Iterable<FriendRequest> req = serv.getNextSENTRequestOnPage(page, mainUser.getId());
+        List<FriendRequest> list = StreamSupport.stream(req.spliterator(), false).collect(Collectors.toList());
         reqList.setAll(list);
        /* to.setCellValueFactory(c->new SimpleStringProperty(serv.getUser(c.getValue().getId().getRight()).toString()));
         status.setCellValueFactory(new PropertyValueFactory<>("Status"));
         dataR1.setCellValueFactory(new PropertyValueFactory<>("Data"));
         requestsSENT.setItems(reqList);*/
-       listReq.setItems(reqList);
-        listReq.setCellFactory(param -> new ListCell<FriendRequest>(){
+        listReq.setItems(reqList);
+        listReq.setCellFactory(param -> new ListCell<FriendRequest>() {
             @Override
             protected void updateItem(FriendRequest item, boolean empty) {
                 super.updateItem(item, empty);
-                if(empty || item == null || item.getId() == null)
+                if (empty || item == null || item.getId() == null)
                     setText(null);
                 else
-                    setText("TO: "+serv.getUser(item.getId().getRight()).toString()+ "\n on: "+item.getData());
+                    setText("TO: " + serv.getUser(item.getId().getRight()).toString() + "\n on: " + item.getData());
             }
         });
 
@@ -568,13 +569,12 @@ public class UserController implements Observer<UserChangeEvent> {
 
     public void handleRmReq() {
         FriendRequest removedRequest = listReq.getSelectionModel().getSelectedItem();
-        if(removedRequest!=null){
+        if (removedRequest != null) {
             serv.removeRequest(removedRequest);
-            initModelSENTREQ();
+            initModelSENTREQ(0);
 
-        }
-        else{
-            MessageAlert.showErrorMessage(null,"You did not select any request to remove!!");
+        } else {
+            MessageAlert.showErrorMessage(null, "You did not select any request to remove!!");
         }
     }
     //EVENTS
@@ -592,90 +592,92 @@ public class UserController implements Observer<UserChangeEvent> {
     ComboBox<Event> eventCombo;
 
     @FXML
-     TableView<Event> tableEvents;
+    TableView<Event> tableEvents;
     @FXML
-            TableColumn<String,Event> nameEvent;
+    TableColumn<String, Event> nameEvent;
     @FXML
-            TableColumn<LocalDate,Event> dataEvent;
+    TableColumn<Event, LocalDate> dataEvent;
     @FXML
-            TableColumn<LocalTime,Event> timeEvent;
+    TableColumn<LocalTime, Event> timeEvent;
 
 
     ObservableList<Event> evList = FXCollections.observableArrayList();
     ObservableList<Event> myEvents = FXCollections.observableArrayList();
-    Map<EventReminder,Timer> myReminders = new HashMap<>();
+    Map<EventReminder, Timer> myReminders = new HashMap<>();
 
-    public void initiateEvents(){
+    public void initiateEvents() {
 
         //initiate combobox
         Iterable<Event> events = serv.getAllEvents();
-        List<Event> eventsList = StreamSupport.stream(events.spliterator(),false).collect(Collectors.toList());
+        List<Event> eventsList = StreamSupport.stream(events.spliterator(), false).collect(Collectors.toList());
         evList.setAll(eventsList);
         eventCombo.setItems(evList);
     }
 
-    public void initiateMyEvents(){
+    public void initiateMyEvents(int currentPage) {
         //initiate tableView
-        myEvents.setAll(serv.getUsersEvents(mainUser.getId()));
+        pagEv.setPageCount(serv.getUsersEvents(mainUser.getId()).size() / nrOnPages1.getValue() + 1);
+        Iterable<Event> events = serv.getNextEventsOnPage(currentPage, mainUser.getId());
+        List<Event> list = StreamSupport.stream(events.spliterator(), false).collect(Collectors.toList());
+
+        myEvents.setAll(list);
         nameEvent.setCellValueFactory(new PropertyValueFactory<>("Name"));
         dataEvent.setCellValueFactory(new PropertyValueFactory<>("Data"));
+        dataEvent.setSortType(TableColumn.SortType.DESCENDING);
         timeEvent.setCellValueFactory(new PropertyValueFactory<>("Time"));
         tableEvents.setItems(myEvents);
-
-
+        tableEvents.getSortOrder().add(dataEvent);
 
 
     }
+
     @FXML
     Label lHour;
     @FXML
     Label lMin;
+    @FXML
+    Pagination pagEv;
+    @FXML
+    Spinner<Integer> nrOnPages1;
+
+    public void handlePagesEv(MouseEvent mouseEvent) {
+        int size = nrOnPages1.getValue();
+        serv.setPageSize(size);
+        initiateMyEvents(0);
+    }
+    public void handleChangePage3(MouseEvent mouseEvent) {
+
+        int paginaCurenta = pagEv.getCurrentPageIndex();
+        initiateMyEvents(paginaCurenta);
+    }
+
 
     public void initEventLabels() {
 
-        evHour.valueProperty().addListener(new ChangeListener<Number>() {
-
-            @Override
-            public void changed(
-                    ObservableValue<? extends Number> observableValue,
-                    Number oldValue,
-                    Number newValue) {
-                lHour.textProperty().setValue(
-                        String.valueOf(newValue.intValue()));
-            }
-        });
-        evMin.valueProperty().addListener(new ChangeListener<Number>() {
-
-            @Override
-            public void changed(
-                    ObservableValue<? extends Number> observableValue,
-                    Number oldValue,
-                    Number newValue) {
-                lMin.textProperty().setValue(
-                        String.valueOf(newValue.intValue()));
-            }
-        });
+        evHour.valueProperty().addListener((observableValue, oldValue, newValue) -> lHour.textProperty().setValue(
+                String.valueOf(newValue.intValue())));
+        evMin.valueProperty().addListener((observableValue, oldValue, newValue) -> lMin.textProperty().setValue(
+                String.valueOf(newValue.intValue())));
 
     }
 
     public void handleCreateEvent() {
         String name = evName.getText();
-        LocalDateTime data = LocalDateTime.of(evDate.getValue(), LocalTime.of((int)evHour.getValue(),(int)evMin.getValue()));
+        LocalDateTime data = LocalDateTime.of(evDate.getValue(), LocalTime.of((int) evHour.getValue(), (int) evMin.getValue()));
 
-        Event newEvent = new Event(name,data);
+        Event newEvent = new Event(name, data);
         newEvent.addParticipant(mainUser.getId());
         newEvent.setId(name);
-       EventReminder reminder = new EventReminder(newEvent);
-       Timer t = new Timer(true);
-       t.schedule(reminder,new GregorianCalendar(newEvent.getData().getYear(),newEvent.getData().getMonthValue()-1,newEvent.getData().getDayOfMonth(),newEvent.getTime().getHour()-1,newEvent.getTime().getMinute()).getTime());
-       myReminders.putIfAbsent(reminder,t);
-        try{
+        EventReminder reminder = new EventReminder(newEvent);
+        Timer t = new Timer(true);
+        t.schedule(reminder, new GregorianCalendar(newEvent.getData().getYear(), newEvent.getData().getMonthValue() - 1, newEvent.getData().getDayOfMonth(), newEvent.getTime().getHour() - 1, newEvent.getTime().getMinute()).getTime());
+        myReminders.putIfAbsent(reminder, t);
+        try {
             serv.createEvent(newEvent);
-            MessageAlert.showMessage(null, Alert.AlertType.INFORMATION,"INFO","Event created succesfully!");
+            MessageAlert.showMessage(null, Alert.AlertType.INFORMATION, "INFO", "Event created succesfully!");
 
-        }
-        catch (Exception e){
-            MessageAlert.showErrorMessage(null,e.getMessage());
+        } catch (Exception e) {
+            MessageAlert.showErrorMessage(null, e.getMessage());
         }
 
 
@@ -683,60 +685,55 @@ public class UserController implements Observer<UserChangeEvent> {
 
     public void handleSubscribeEvent() {
         Event event = eventCombo.getValue();
-        if ( event != null) {
-            if(event.getParticipants().contains(mainUser.getId()))
-                MessageAlert.showErrorMessage(null,"You are already subscribed to this event!");
-            else
-            {
-                if(event.getDate().isBefore(LocalDateTime.now())){
-                    MessageAlert.showErrorMessage(null,"This event is over.Please choose another!");
-                }
-                else {
-                    try{
+        if (event != null) {
+            if (event.getParticipants().contains(mainUser.getId()))
+                MessageAlert.showErrorMessage(null, "You are already subscribed to this event!");
+            else {
+                if (event.getDate().isBefore(LocalDateTime.now())) {
+                    MessageAlert.showErrorMessage(null, "This event is over.Please choose another!");
+                } else {
+                    try {
                         event.addParticipant(mainUser.getId());
                         serv.updateEvent(event);
                         EventReminder reminder = new EventReminder(event);
                         Timer t = new Timer(true);
-                        t.schedule(reminder,new GregorianCalendar(event.getData().getYear(),event.getData().getMonthValue()-1,event.getData().getDayOfMonth(),event.getTime().getHour()-1,event.getTime().getMinute()).getTime());
-                        myReminders.putIfAbsent(reminder,t);
-                        MessageAlert.showMessage(null,Alert.AlertType.INFORMATION,"INFO","You subscribed to this event succesfully!");
+                        t.schedule(reminder, new GregorianCalendar(event.getData().getYear(), event.getData().getMonthValue() - 1, event.getData().getDayOfMonth(), event.getTime().getHour() - 1, event.getTime().getMinute()).getTime());
+                        myReminders.putIfAbsent(reminder, t);
+                        MessageAlert.showMessage(null, Alert.AlertType.INFORMATION, "INFO", "You subscribed to this event succesfully!");
 
-                    }
-                    catch (Exception e){
-                        MessageAlert.showErrorMessage(null,e.getMessage());
+                    } catch (Exception e) {
+                        MessageAlert.showErrorMessage(null, e.getMessage());
                     }
                 }
 
             }
 
-        }else{
-            MessageAlert.showErrorMessage(null,"Please select an event to subscribe first!");
+        } else {
+            MessageAlert.showErrorMessage(null, "Please select an event to subscribe first!");
         }
     }
 
     public void handleUnsubscribeEvent() {
         Event eventToUnsubscribe = tableEvents.getSelectionModel().getSelectedItem();
-        if(eventToUnsubscribe != null){
-            try{
+        if (eventToUnsubscribe != null) {
+            try {
                 eventToUnsubscribe.removeParticipant(mainUser.getId());
                 serv.updateEvent(eventToUnsubscribe);
                 final EventReminder[] key = new EventReminder[1];
-                myReminders.forEach((x,y)->{
-                    if(x.event.getName().equals( eventToUnsubscribe.getName()))
-                    {
+                myReminders.forEach((x, y) -> {
+                    if (x.event.getName().equals(eventToUnsubscribe.getName())) {
                         y.cancel();
-                        key[0] =x;
+                        key[0] = x;
                     }
                 });
                 myReminders.remove(key[0]);
-                MessageAlert.showMessage(null,Alert.AlertType.INFORMATION,"INFO","You unsubscribed to this event succesfully!");
+                MessageAlert.showMessage(null, Alert.AlertType.INFORMATION, "INFO", "You unsubscribed to this event succesfully!");
 
+            } catch (Exception e) {
+                MessageAlert.showErrorMessage(null, e.getMessage());
             }
-            catch (Exception e){
-                MessageAlert.showErrorMessage(null,e.getMessage());
-            }
-        }else{
-            MessageAlert.showErrorMessage(null,"Please select an event to unsubscribe first!");
+        } else {
+            MessageAlert.showErrorMessage(null, "Please select an event to unsubscribe first!");
         }
     }
 
@@ -757,12 +754,17 @@ public class UserController implements Observer<UserChangeEvent> {
     Label lSchool;
 
     public void handleEditSchool() {
-        if(school.isDisabled()){
+        if (school.isDisabled()) {
             school.setDisable(false);
             lSchool.setText("save");
-        }
-        else {
+        } else {
             school.setDisable(true);
+            mainUser.setSchool(school.getText());
+            try {
+                serv.updateUser(mainUser);
+            } catch (Exception e) {
+                MessageAlert.showErrorMessage(null, e.getMessage());
+            }
             lSchool.setText("edit");
         }
 
@@ -772,27 +774,40 @@ public class UserController implements Observer<UserChangeEvent> {
     TextField living;
     @FXML
     Label lLiv;
+
     public void handleEditLiv() {
-        if(living.isDisabled()){
+        if (living.isDisabled()) {
             living.setDisable(false);
             lLiv.setText("save");
-        }
-        else {
+        } else {
             living.setDisable(true);
+            mainUser.setLiving(living.getText());
+            try {
+                serv.updateUser(mainUser);
+            } catch (Exception e) {
+                MessageAlert.showErrorMessage(null, e.getMessage());
+            }
             lLiv.setText("edit");
         }
-    }@FXML
+    }
+
+    @FXML
     TextArea about;
     @FXML
     Label lAbout;
 
     public void handleEditBio() {
-        if(about.isDisabled()){
+        if (about.isDisabled()) {
             about.setDisable(false);
             lAbout.setText("save");
-        }
-        else {
+        } else {
             about.setDisable(true);
+            mainUser.setAbout(about.getText());
+            try {
+                serv.updateUser(mainUser);
+            } catch (Exception e) {
+                MessageAlert.showErrorMessage(null, e.getMessage());
+            }
             lAbout.setText("edit");
         }
     }
@@ -803,12 +818,17 @@ public class UserController implements Observer<UserChangeEvent> {
     Label lFrom;
 
     public void handleEditFrom() {
-        if(Textfrom.isDisabled()){
+        if (Textfrom.isDisabled()) {
             Textfrom.setDisable(false);
             lFrom.setText("save");
-        }
-        else {
+        } else {
             Textfrom.setDisable(true);
+            mainUser.setFrom(Textfrom.getText());
+            try {
+                serv.updateUser(mainUser);
+            } catch (Exception e) {
+                MessageAlert.showErrorMessage(null, e.getMessage());
+            }
             lFrom.setText("edit");
         }
     }
@@ -823,33 +843,40 @@ public class UserController implements Observer<UserChangeEvent> {
     Label lhobby;
 
     public void handleEditGender() {
-        if(gender.isDisabled()){
+        if (gender.isDisabled()) {
             gender.setDisable(false);
             lGender.setText("save");
-        }
-        else {
+        } else {
             gender.setDisable(true);
+            mainUser.setSex(gender.getText());
+            try {
+                serv.updateUser(mainUser);
+            } catch (Exception e) {
+                MessageAlert.showErrorMessage(null, e.getMessage());
+            }
             lGender.setText("edit");
         }
     }
 
     public void handleEditHobby() {
-        if(hobby.isDisabled()){
+        if (hobby.isDisabled()) {
             hobby.setDisable(false);
             lhobby.setText("save");
-        }
-        else {
+        } else {
             hobby.setDisable(true);
+            mainUser.setHobby(hobby.getText());
+            try {
+                serv.updateUser(mainUser);
+            } catch (Exception e) {
+                MessageAlert.showErrorMessage(null, e.getMessage());
+            }
             lhobby.setText("edit");
         }
     }
 
 
 
-
-
 }
-
 
 class EventReminder extends TimerTask{
 

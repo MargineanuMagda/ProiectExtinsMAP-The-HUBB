@@ -719,6 +719,21 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
         Page<FriendRequest> friendPage = paginator.paginate();
         return friendPage.getContent().collect(Collectors.toSet());
     }
+    public Set<FriendRequest> getNextSENTRequestOnPage(int page,long id){
+        this.page=page;
+        Pageable pageable = new PageableClass(page,this.size);
+        Paginator<FriendRequest> paginator = new Paginator<>(pageable,this.sentRequests(id));
+        Page<FriendRequest> friendPage = paginator.paginate();
+        return friendPage.getContent().collect(Collectors.toSet());
+    }
+    public Set<Event> getNextEventsOnPage(int currentPage, Long id) {
+        this.page=page;
+        Pageable pageable = new PageableClass(page,this.size);
+        Paginator<Event> paginator = new Paginator<>(pageable,this.getUsersEvents(id));
+        Page<Event> evPage = paginator.paginate();
+        return evPage.getContent().collect(Collectors.toSet());
+    }
+
 
     //create an event
     public void createEvent(Event event) {
@@ -751,4 +766,11 @@ public class ServiceDbNetwork  implements Observable<UserChangeEvent> {
         return ev;
 
     }
+
+    public void updateUser(Utilizator mainUser) {
+
+        repoUsers.update(mainUser);
+    }
+
+
 }

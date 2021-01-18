@@ -277,7 +277,7 @@
                                 </ImageView>
                             </HBox>
 
-                            <TableView onMouseClicked="#handleShowConv" fx:id="table" prefWidth="600.0">
+                            <TableView onMouseClicked="#handleShowConv" fx:id="table" prefWidth="600.0"  >
                                 <columns>
                                     <TableColumn prefWidth="150" fx:id="from" text="FROM"/>
                                     <TableColumn prefWidth="150" fx:id="date" text="DATA"/>
@@ -373,7 +373,8 @@
                             <VBox>
                                 <Label prefHeight="50" text="..and here are the requests you sent" style="-fx-font-size: 16"/>
                                 <ListView fx:id="listReq" prefWidth="330" stylesheets="@../css/label.css"/>
-
+                                <Pagination fx:id="pagSENTReq" prefWidth="200.0" pageCount="10"
+                                            onMouseClicked="#handleChangePage2"/>
                             </VBox>
 
                         </VBox>
@@ -383,6 +384,7 @@
                                 <Label text="           "/>
                                 <Button onAction="#handleRmReq" text="REMOVE REQUEST" prefHeight="50" prefWidth="135"/>
                             </HBox>
+
 
                         </VBox>
                     </HBox>
@@ -667,24 +669,42 @@
                             <Label/>
                             <HBox>
                                 <Label text="   "/>
-                                <TableView fx:id="tableEvents" prefWidth="350">
-                                    <columns>
-                                        <TableColumn prefWidth="150" fx:id="nameEvent" text="Name"/>
-                                        <TableColumn prefWidth="100" fx:id="dataEvent" text="Date"/>
-                                        <TableColumn prefWidth="100" fx:id="timeEvent" text="Time"/>
-                                    </columns>
-                                </TableView>
+                                <VBox>
+                                    <TableView fx:id="tableEvents" prefWidth="350">
+                                        <columns>
+                                            <TableColumn prefWidth="150" fx:id="nameEvent" text="Name"/>
+                                            <TableColumn prefWidth="100" fx:id="dataEvent" text="Date"/>
+                                            <TableColumn prefWidth="100" fx:id="timeEvent" text="Time"/>
+                                        </columns>
+                                    </TableView>
+                                    <Label/>
+                                    <Pagination fx:id="pagEv" prefWidth="200.0" pageCount="10"
+                                                onMouseClicked="#handleChangePage3">
+
+                                    </Pagination>
+
+                                </VBox>
+
                                 <Label text="       "/>
-                                <Button onAction="#handleUnsubscribeEvent" text="UNSUBSCRIBE"/>
+                                <VBox>
+                                    <Button onAction="#handleUnsubscribeEvent" text="UNSUBSCRIBE"/>
+                                    <Label/>
+                                        <Label style="-fx-font-size: 15" text="Elements on a page"/>
+                                        <Spinner fx:id="nrOnPages1" onMouseClicked="#handlePagesEv" min="1" max="15" initialValue="5"/>
+
+                                </VBox>
+
 
                             </HBox>
 
                         </VBox>
 
                     </Tab>
+
                 </TabPane>
             </VBox>
         </Tab>
+        <Tab  text="LOG OUT" onSelectionChanged="#handleLogOut"></Tab>
     </TabPane>
 
 

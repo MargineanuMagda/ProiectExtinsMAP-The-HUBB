@@ -93,6 +93,10 @@ public class Utilizator extends Entity<Long>{
         friends.remove(oldFriend);
     }
 
+    public String getBio(){
+        return getSchool()+";"+getLiving()+";"+getFrom()+";"+getHobby()+";"+getSex()+";"+getAbout();
+
+    }
     @Override
     public String toString() {
 
