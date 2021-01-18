@@ -875,7 +875,28 @@ public class UserController implements Observer<UserChangeEvent> {
     }
 
 
+    public void handleMute(ActionEvent actionEvent) {
+        Event eventToMute = tableEvents.getSelectionModel().getSelectedItem();
+        if (eventToMute != null) {
+            try {
 
+                final EventReminder[] key = new EventReminder[1];
+                myReminders.forEach((x, y) -> {
+                    if (x.event.getName().equals(eventToMute.getName())) {
+                        y.cancel();
+                        key[0] = x;
+                    }
+                });
+                myReminders.remove(key[0]);
+                MessageAlert.showMessage(null, Alert.AlertType.INFORMATION, "INFO", "You muted this event succesfully!");
+
+            } catch (Exception e) {
+                MessageAlert.showErrorMessage(null, e.getMessage());
+            }
+        } else {
+            MessageAlert.showErrorMessage(null, "Please select an event to mute first!");
+        }
+    }
 }
 
 class EventReminder extends TimerTask{

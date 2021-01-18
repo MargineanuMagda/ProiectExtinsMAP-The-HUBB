@@ -689,6 +689,8 @@
                                 <VBox>
                                     <Button onAction="#handleUnsubscribeEvent" text="UNSUBSCRIBE"/>
                                     <Label/>
+                                    <Button onAction="#handleMute" text="MUTE"/>
+                                    <Label/>
                                         <Label style="-fx-font-size: 15" text="Elements on a page"/>
                                         <Spinner fx:id="nrOnPages1" onMouseClicked="#handlePagesEv" min="1" max="15" initialValue="5"/>
 

@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import socialnetwork.domain.LogIn;
@@ -30,9 +31,11 @@ public class NewUserController {
     @FXML
     PasswordField passwC;
 
+
     public void setService(ServiceDbNetwork serv,Stage stage){
         this.serv=serv;
         this.st=stage;
+
     }
 
     public void hanndleAddUser(ActionEvent actionEvent) {
